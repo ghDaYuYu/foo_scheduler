@@ -517,6 +517,87 @@ void DateTimeEventEditor::OnDayTypeSelChange(UINT uNotifyCode, int nID, CWindow 
 	UpdateDayControls();
 }
 
+LRESULT DateTimeEventEditor::OnContextMenu(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	HWND hwndCtrl = (HWND)wParam;
+	context_menu_show(hwndCtrl, lParam);
+	return FALSE;
+}
+
+bool DateTimeEventEditor::context_menu_show(HWND wnd, LPARAM lParamPos)
+{
+	SYSTEMTIME st;
+	boost::posix_time::time_duration t = m_pEvent->GetTime();
+	st.wHour = static_cast<WORD>(t.hours());
+	st.wMinute = static_cast<WORD>(t.minutes());
+	st.wSecond = static_cast<WORD>(t.seconds());
+	
+	if (st.wHour != 0 || st.wMinute != 0 || st.wSecond != 0) {
+		return false;
+	}
+
+	const bool isTimePicker = uGetDlgItem(IDC_TIME_PICKER) == wnd;
+	bool bvk_apps = lParamPos == -1;
+
+	POINT point;
+
+	if (bvk_apps) {
+		CRect rect;
+		CWindow(wnd).GetWindowRect(&rect);
+		point = rect.CenterPoint();
+	}
+	else {
+		point.x = GET_X_LPARAM(lParamPos);
+		point.y = GET_Y_LPARAM(lParamPos);
+	}
+
+	try {
+
+		HMENU menu = CreatePopupMenu();
+
+		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N1M, "Now +&1'");
+		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N2M, "Now +&2'");
+		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N3M, "Now +&3'");
+
+		int cmd = TrackPopupMenu(menu, TPM_RIGHTBUTTON | TPM_NONOTIFY | TPM_RETURNCMD, point.x, point.y, 0, wnd, 0);
+		DestroyMenu(menu);
+
+		context_menu_switch(wnd, point, cmd);
+	}
+	catch (...) {}
+	return false;
+}
+
+bool DateTimeEventEditor::context_menu_switch(HWND wnd, POINT point, int cmd) {
+
+	CDateTimePickerCtrl atime = (CDateTimePickerCtrl)uGetDlgItem(IDC_TIME_PICKER);
+
+	SYSTEMTIME st;
+	GetLocalTime(&st);
+
+	switch (cmd)
+	{
+	case ID_TP_POPUP_N1M: {
+		st.wMinute += 1;
+		break;
+	}
+	case ID_TP_POPUP_N2M: {
+		st.wMinute += 2;
+		break;
+	}
+	case ID_TP_POPUP_N3M: {
+		st.wMinute += 3;
+		break;
+	}
+	default: {
+			return false;
+	}
+	} //end switch
+
+	atime.SetSystemTime(GDT_VALID, &st);
+	return false;
+}
+
 void DateTimeEventEditor::CreateWeekDaysControl()
 {
 	m_weekDays.SubclassWindow(GetDlgItem(IDC_LIST_WEEK_DAYS));

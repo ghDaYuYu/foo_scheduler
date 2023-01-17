@@ -89,6 +89,12 @@ class DateTimeEventEditor : public CDialogImpl<DateTimeEventEditor>, public fb2k
 public:
 	enum { IDD = IDD_DATETIME_EVENT_CONFIG };
 
+	enum {
+		ID_TP_POPUP_N1M = 1,
+		ID_TP_POPUP_N2M,
+		ID_TP_POPUP_N3M,
+	};
+
 	DateTimeEventEditor(DateTimeEvent* pEvent, PrefPageModel* pPrefPageModel);
 
 private:
@@ -96,7 +102,7 @@ private:
 		MSG_WM_INITDIALOG(OnInitDialog)
 
 		COMMAND_HANDLER_EX(IDC_COMBO_DAY, CBN_SELCHANGE, OnDayTypeSelChange)
-
+		MESSAGE_HANDLER(WM_CONTEXTMENU, OnContextMenu)
 		COMMAND_ID_HANDLER_EX(IDOK, OnClose)
 		COMMAND_ID_HANDLER_EX(IDCANCEL, OnClose)
 	END_MSG_MAP()
@@ -105,6 +111,9 @@ private:
 	void OnClose(UINT uNotifyCode, int nID, CWindow wndCtl);
 
 	void OnDayTypeSelChange(UINT uNotifyCode, int nID, CWindow wndCtl);
+	LRESULT OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	bool context_menu_show(HWND wnd, LPARAM lParamPos);
+	bool context_menu_switch(HWND wnd, POINT point, int cmd);
 
 private:
 	void InitTime();

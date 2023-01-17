@@ -58,21 +58,19 @@ private:
 
 } // namespace
 
-EventListWindow::EventListWindow() : m_columnsBeingInited(false)
-{
+std::vector<data_t> m_vdata;
 
+EventListWindow::~EventListWindow()
+{
+	for (auto& w : m_vdata) {
+		w.p = NULL;
+	}
+	m_vdata.clear();
 }
 
-void EventListWindow::InitWindow(PrefPageModel* pModel)
+void EventListWindow::Init(PrefPageModel* pModel)
 {
 	m_pModel = pModel;
-
-	DWORD dwStyle = LVS_EX_LABELTIP | LVS_EX_DOUBLEBUFFER;
-	SetExtendedListViewStyle(dwStyle, dwStyle);
-
-	::SetWindowTheme(m_hWnd, L"explorer", 0);
-
-	InitColumns();
 
 	std::vector<Event*> events = m_pModel->GetEvents();
 	std::for_each(events.begin(), events.end(), boost::bind(&EventListWindow::AddNewEvent, this, _1));
@@ -86,90 +84,69 @@ void EventListWindow::InitWindow(PrefPageModel* pModel)
 
 void EventListWindow::OnNewEventAdded(Event* pNewEvent)
 {
-	SelectItem(AddNewEvent(pNewEvent));
+	SelectSingle(AddNewEvent(pNewEvent));
 }
 
-int EventListWindow::AddNewEvent(Event* pNewEvent)
+size_t EventListWindow::AddNewEvent(Event* pNewEvent)
 {
-	int pos = GetItemCount();
+	size_t pos = GetItemCount();
 	InsertEventAtPos(pos, pNewEvent);
 	return pos;
 }
 
-LRESULT EventListWindow::OnItemChanged(LPNMHDR pnmh)
-{
-	NMLISTVIEW* pInfo = reinterpret_cast<NMLISTVIEW*>(pnmh);
+void build_row_data(data_t& out, size_t pos, const Event* pEvent, ActionList* pActionList) {
 
-	int item = pInfo->iItem;
+	std::wstring wstr = pEvent->GetDescription().c_str();
+	char buffer[255];
+	pfc::stringcvt::convert_wide_to_utf8(buffer, 255, wstr.c_str(), wstr.size());
 
-	if (item == -1)
-		return 0;
+	out.actionname = "";
+	out.eventdesc = buffer;
 
-	if ((pInfo->uChanged & LVIF_STATE) != LVIF_STATE)
-		return 0;
-
-	int checked = ((pInfo->uNewState & LVIS_STATEIMAGEMASK) >> 12) - 1;
-
-	if (checked == -1)
-		return 0;
-
-	Event* pEvent = reinterpret_cast<Event*>(GetItemData(item));
-	
-	if (pEvent == 0)
-		return 0;
-
-	bool newState = checked == 1 ? true : false;
-
-	if (pEvent->IsEnabled() != newState)
-	{
-		pEvent->Enable(checked == 1 ? true : false);
-		m_pModel->UpdateEvent(pEvent);
+	if (pActionList != 0) {
+		wstr = pActionList->GetName().c_str();
+		pfc::stringcvt::convert_wide_to_utf8(buffer, 255, wstr.c_str(), wstr.size());
 	}
-
-	return 0;
+	else {
+		buffer[0] = '\0';
+	}
+	out.actionname = buffer;
+	out.enabled = pEvent->IsEnabled();
+	out.p = reinterpret_cast<DWORD_PTR>(pEvent);
 }
 
 void EventListWindow::OnEventUpdated(Event* pEvent)
 {
-	int item = FindItemByEvent(pEvent);
+	size_t item = FindItemByEvent(pEvent);
 	_ASSERTE(item != -1);
 
-	SetItem(item, 0, LVIF_TEXT, pEvent->GetDescription().c_str(), 0, 0, 0, 0);
-	
+	auto & d = m_vdata.at(item);
 	ActionList* pActionList = m_pModel->GetActionListByGUID(pEvent->GetActionListGUID());
-	SetItem(item, 1, LVIF_TEXT, pActionList != 0 ? pActionList->GetName().c_str() : L"", 0, 0, 0, 0);
+	build_row_data(d, item, pEvent, pActionList);
+
+	UpdateItemsAll();
 }
 
-void EventListWindow::OnLButtonDblClk(UINT nFlags, CPoint point)
+void EventListWindow::ItemAction(size_t item)
 {
-	DefWindowProc();
-
-	UINT nHitFlags;
-	int  iHit = HitTest(point, &nHitFlags);
-
-	if (nHitFlags == LVHT_ONITEMSTATEICON)
-		return;
-
-	int item = GetSelectedIndex();
-
-	if (item == -1)
-		return;
-
-	EditEvent(reinterpret_cast<Event*>(GetItemData(item)));
+	EditEvent(reinterpret_cast<Event*>(m_vdata.at(item).p));
 }
 
-int EventListWindow::FindItemByEvent(const Event* pEvent)
+size_t EventListWindow::FindItemByEvent(const Event* pEvent)
 {
-	for (int i = 0; i < GetItemCount(); ++i)
-		if (reinterpret_cast<const Event*>(GetItemData(i)) == pEvent)
-			return i;
+
+	auto fit = std::find_if(m_vdata.begin(), m_vdata.end(), [pEvent](const data_t item) {
+		return reinterpret_cast<const Event*>(item.p) == pEvent;
+		});
+
+	if (fit != m_vdata.end()) return std::distance(m_vdata.begin(), fit);
 
 	return -1;
 }
 
-void EventListWindow::ShowEventContextMenu(int item, const CPoint& point)
+void EventListWindow::ShowEventContextMenu(size_t item, const CPoint& point)
 {
-	Event* pEvent = reinterpret_cast<Event*>(GetItemData(item));
+	Event* pEvent = reinterpret_cast<Event*>(m_vdata.at(item).p/*GetItemData(item)*/);
 
 	CPoint pnt = point;
 	ClientToScreen(&pnt);
@@ -177,7 +154,7 @@ void EventListWindow::ShowEventContextMenu(int item, const CPoint& point)
 	CMenu menuPopup;
 	menuPopup.CreatePopupMenu();
 
-	AppendActionListsItems(menuPopup, pEvent);
+	AppendActionListsItems(menuPopup, false, pEvent);
 	AppendEventItems(menuPopup, pEvent);
 
 	UINT uCmdID = menuPopup.TrackPopupMenu(TPM_LEFTALIGN | TPM_NONOTIFY | TPM_RETURNCMD, pnt.x, pnt.y, GetActiveWindow());
@@ -192,25 +169,15 @@ void EventListWindow::ShowEventContextMenu(int item, const CPoint& point)
 		break;
 
     case menuItemDuplicate:
-        {
-            EventDuplicateVisitor visitor(m_pModel->GetEvents());
-            pEvent->ApplyVisitor(visitor);           
-            m_pModel->AddEvent(visitor.TakeEvent());
-        }
-        break;
+		{
+			EventDuplicateVisitor visitor(m_pModel->GetEvents());
+			pEvent->ApplyVisitor(visitor);           
+			m_pModel->AddEvent(visitor.TakeEvent());
+		}
+		break;
 
 	case menuItemRemove:
-		m_pModel->RemoveEvent(pEvent);
-		break;
-
-	case menuItemMoveUp:
-		m_pModel->MoveEventUp(pEvent);
-		MoveEventItem(pEvent, true);
-		break;
-
-	case menuItemMoveDown:
-		m_pModel->MoveEventDown(pEvent);
-		MoveEventItem(pEvent, false);
+		RemoveMask(GetSelectionMask());
 		break;
 
 	default: // Action list selected.
@@ -226,44 +193,52 @@ void EventListWindow::ShowEventContextMenu(int item, const CPoint& point)
 	}
 }
 
-void EventListWindow::AppendActionListsItems(CMenu& menuPopup, Event* pEvent)
+void EventListWindow::AppendActionListsItems(CMenu& menuPopup, bool replace, Event* pEvent)
 {
-	CMenu menuActionLists;
-	menuActionLists.CreatePopupMenu();
+	CMenu * menuActionLists;
+	if (replace) {
+		menuActionLists = &menuPopup;
+	}
+	else {
+		menuActionLists = new CMenu();
+		menuActionLists->CreatePopupMenu();
+	}
 
 	std::vector<ActionList*> actionLists = m_pModel->GetActionLists();
 
 	for (std::size_t i = 0; i < actionLists.size(); ++i)
 	{
-		menuActionLists.AppendMenu(MF_STRING | MF_BYCOMMAND, static_cast<UINT_PTR>(i + 1),
+		menuActionLists->AppendMenu(MF_STRING | MF_BYCOMMAND, static_cast<UINT_PTR>(i + 1),
 			actionLists[i]->GetName().c_str());
 	}
 
 	// Create "None" item.
 	if (!actionLists.empty())
-		menuActionLists.AppendMenu(MF_SEPARATOR);
+		menuActionLists->AppendMenu(MF_SEPARATOR);
 
-	menuActionLists.AppendMenu(MF_STRING | MF_BYCOMMAND,
+	menuActionLists->AppendMenu(MF_STRING | MF_BYCOMMAND,
 		static_cast<UINT_PTR>(actionLists.size() + 1), L"None");
 
 	// Check item.
 	if (pEvent->GetActionListGUID() == pfc::guid_null)
 	{
-		menuActionLists.CheckMenuRadioItem(1, actionLists.size() + 1,
-			actionLists.size() + 1, MF_BYCOMMAND);
+		menuActionLists->CheckMenuRadioItem((UINT)1, (UINT)actionLists.size() + 1,
+			(UINT)actionLists.size() + 1, MF_BYCOMMAND);
 	}
 	else
 	{
 		for (std::size_t i = 0; i < actionLists.size(); ++i)
 			if (pEvent->GetActionListGUID() == actionLists[i]->GetGUID())
 			{
-				menuActionLists.CheckMenuRadioItem(1, actionLists.size(),
-					i + 1, MF_BYCOMMAND);
+				menuActionLists->CheckMenuRadioItem((UINT)1, (UINT)actionLists.size(),
+					(UINT)i + 1, MF_BYCOMMAND);
 				break;
 			}
 	}
-
-	menuPopup.AppendMenu(MF_POPUP, menuActionLists.Detach(), L"Assign action list");
+	if (!replace) {
+		menuPopup.AppendMenu(MF_POPUP, menuActionLists->Detach(), L"Assign action list");
+		delete menuActionLists;
+	}
 }
 
 void EventListWindow::AppendEventItems(CMenu& menuPopup, const Event* pEvent)
@@ -279,47 +254,46 @@ void EventListWindow::AppendEventItems(CMenu& menuPopup, const Event* pEvent)
 	menuPopup.AppendMenu(MF_STRING | MF_BYCOMMAND,
 		static_cast<UINT_PTR>(menuItemRemove), L"Remove");
 
-	menuPopup.AppendMenu(MF_SEPARATOR);
-	menuPopup.AppendMenu(MF_STRING | MF_BYCOMMAND |
-		(m_pModel->CanMoveEventUp(pEvent) ? 0 : MF_DISABLED | MF_GRAYED),
-		static_cast<UINT_PTR>(menuItemMoveUp), L"Move up");
-	menuPopup.AppendMenu(MF_STRING | MF_BYCOMMAND |
-		(m_pModel->CanMoveEventDown(pEvent) ? 0 : MF_DISABLED | MF_GRAYED),
-		static_cast<UINT_PTR>(menuItemMoveDown), L"Move down");
 }
 
 void EventListWindow::EditEvent(Event* pEvent)
 {
 	if (!pEvent->ShowConfigDialog(*this, m_pModel))
 		return;
+	
+	size_t pos = FindItemByEvent(pEvent);
+	ActionList* pActionList = m_pModel->GetActionListByGUID(pEvent->GetActionListGUID());
+	data_t& adata = m_vdata.at(pos);
+	build_row_data(adata, pos, pEvent, pActionList);
+	UpdateItem(pos);
 
 	m_pModel->UpdateEvent(pEvent);
 }
 
 void EventListWindow::OnEventRemoved(Event* pEvent)
 {
-	int item = FindItemByEvent(pEvent);
-	_ASSERTE(item != -1);
-	DeleteItem(item);
+	size_t pos = FindItemByEvent(pEvent);
+	_ASSERTE(pos != -1);
+	m_vdata.erase(m_vdata.begin() + pos);
+	UpdateItemsAll();
 }
 
 void EventListWindow::OnModelReset()
 {
-	DeleteAllItems();
+	m_vdata.clear();
+	UpdateItemsAll();
 }
 
 void EventListWindow::OnContextMenu(CWindow wnd, CPoint point)
 {
-	int selected = GetSelectedIndex();
+	size_t selected = GetSingleSel();
 
 	if (selected == -1)
 		return;
 
 	if (point.x < 0 && point.y < 0)
 	{
-		CRect itemRect;
-		GetItemRect(selected, itemRect, LVIR_LABEL);
-
+		CRect itemRect = GetItemRect(selected);
 		point.x = itemRect.left;
 		point.y = itemRect.bottom;
 	}
@@ -329,71 +303,173 @@ void EventListWindow::OnContextMenu(CWindow wnd, CPoint point)
 	ShowEventContextMenu(selected, point);
 }
 
-LRESULT EventListWindow::OnHeaderItemChanged(LPNMHDR pnmh)
-{
-	NMHEADER* pHeader = reinterpret_cast<NMHEADER*>(pnmh);
-
-	if (!pHeader->pitem || (pHeader->pitem->mask & HDI_WIDTH) != HDI_WIDTH || m_columnsBeingInited)
-		return 0;
-
-	std::vector<int> cw;
-	cw.push_back(GetColumnWidth(0));
-	cw.push_back(GetColumnWidth(1));
-
-	ServiceManager::Instance().GetModel().SetEventsWindowColumnsWidths(cw);
-
-	SetMsgHandled(false);
-
-	return 0;
-}
-
 void EventListWindow::InitColumns()
 {
-	m_columnsBeingInited = true;
-
-	AddColumn(L"Event", 0);
-	AddColumn(L"Action list", 1);
+	InitializeHeaderCtrl(HDS_DRAGDROP);
 
 	CRect rcList;
 	GetClientRect(rcList);
 
-	// Using global model to request columns' widths.
-	std::vector<int> cw = ServiceManager::Instance().GetModel().GetEventsWindowColumnsWidths();
+	auto scw = GetSystemMetrics(SM_CXVSCROLL);
 
-	if (cw.empty())
-	{
-		SetColumnWidth(0, (rcList.Width() * 2) / 3);
-		SetColumnWidth(1, LVSCW_AUTOSIZE_USEHEADER);
-	}
-	else
-	{
-		_ASSERTE(cw.size() == 2);
-
-		SetColumnWidth(0, cw[0]);
-		SetColumnWidth(1, cw[1]);
-	}
-
-	m_columnsBeingInited = false;
+	AddColumnEx("", scw);
+	AddColumnEx("Event", (rcList.Width() * 2) / 3);
+	AddColumn("Action list", UINT32_MAX);
 }
 
-void EventListWindow::InsertEventAtPos(int pos, const Event* pEvent)
+void EventListWindow::InsertEventAtPos(size_t pos, const Event* pEvent)
 {
-	AddItem(pos, 0, pEvent->GetDescription().c_str());
-
 	ActionList* pActionList = m_pModel->GetActionListByGUID(pEvent->GetActionListGUID());
-	AddItem(pos, 1, pActionList != 0 ? pActionList->GetName().c_str() : L"");
 
-	// Do not reorder! Dependency in EventListWindow::OnItemChanged
-	SetItemData(pos, reinterpret_cast<DWORD_PTR>(pEvent));
-	SetCheckState(pos, pEvent->IsEnabled());
+	data_t item;
+	build_row_data(item, pos, pEvent, pActionList);
+	m_vdata.emplace_back(item);
 }
 
-void EventListWindow::MoveEventItem(const Event* pEvent, bool up)
-{
-	int pos = FindItemByEvent(pEvent);
-	int newPos = pos + (up ? - 1 : 1);
+void EventListWindow::SetCellCheckState(size_t item, size_t subItem, bool value) {
+	if (subItem == 0) {
+		auto& rec = m_vdata[item];
+		if (rec.enabled != value) {
+			rec.enabled = value;
+			Event* pEvent = reinterpret_cast<Event*>(m_vdata.at(item).p);
+			pEvent->Enable(rec.enabled);
+			m_pModel->UpdateEvent(pEvent);
 
-	DeleteItem(pos);
-	InsertEventAtPos(newPos, pEvent);
-	SelectItem(newPos);
+			__super::SetCellCheckState(item, subItem, value);
+		}
+	}
+}
+
+void EventListWindow::OnSubItemClicked(t_size item, t_size subItem, CPoint pt) {
+
+	if (item == footerRow()) {
+		onFooterClicked(); return;
+	}
+	else if (subItem == 2) {
+		CRect rcButton = GetSubItemRectAbs(item, subItem);
+		rcButton.MoveToY(rcButton.top + (int)(1.5 * rcButton.Height()));
+
+		POINT pt;
+		pt.x = rcButton.left;
+		pt.y = rcButton.bottom;
+		::ClientToScreen(m_hWnd, &pt);
+
+		enum { MENU_DEFAULT = 1, MENU_EXPORT, MENU_IMPORT };
+
+		Event* pEvent = reinterpret_cast<Event*>(m_vdata.at(item).p/*GetItemData(item)*/);
+
+		CMenu menuPopup;
+		menuPopup.CreatePopupMenu();
+		AppendActionListsItems(menuPopup, true, pEvent);
+
+		int uCmdID = TrackPopupMenu(menuPopup, TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RETURNCMD, pt.x, pt.y, 0, m_hWnd, NULL);
+		DestroyMenu(menuPopup);
+
+		if (uCmdID) {
+			std::size_t actionListIndex = uCmdID - 1;
+			std::vector<ActionList*> actionLists = m_pModel->GetActionLists();
+
+			pEvent->SetActionListGUID(actionListIndex != actionLists.size() ?
+				actionLists[actionListIndex]->GetGUID() : pfc::guid_null);
+			m_pModel->UpdateEvent(pEvent);
+
+			UpdateItem(item);
+		}
+	}	else if (TableEdit_IsColumnEditable(subItem)) {
+		Event* pEvent = reinterpret_cast<Event*>(m_vdata.at(item).p);
+		bool btime_event = pEvent->GetName()._Equal(L"date/time event");
+
+			if (btime_event && subItem == 1) {
+				TableEdit_Start(item, subItem); return;
+		}
+	}
+	__super::OnSubItemClicked(item, subItem, pt);
+}
+
+// Inplace edit handlers
+// Overrides of CTableEditHelperV2 methods
+void EventListWindow::TableEdit_SetField(t_size item, t_size subItem, const char* value) {
+	if (subItem == 0) {
+		m_vdata[item].enabled = value;
+		ReloadItem(item);
+	}
+	else if (subItem == 1) {
+		m_vdata[item].eventdesc = value;
+		ReloadItem(item);
+		Event* pEvent = reinterpret_cast<Event*>(m_vdata.at(item).p);
+		ActionList* pActionList = m_pModel->GetActionListByGUID(pEvent->GetActionListGUID());
+
+		if (pEvent->GetName()._Equal(L"date/time event")) {
+			TCHAR w[255];
+			pfc::string8 str = pfc::string8(value);
+			pfc::stringcvt::convert_utf8_to_wide(w, 255, value, str.get_length());
+			((DateTimeEvent*)pEvent)->SetTitle(w);
+			m_pModel->UpdateEvent(pEvent);
+		}
+
+		data_t dt;
+		build_row_data(dt, item, pEvent, pActionList);
+		m_vdata.at(item) = dt;
+		UpdateItem(item);
+	}
+}
+
+void EventListWindow::TableEdit_GetField(t_size item, t_size subItem, pfc::string_base& out, t_size& lineCount) {
+	if (subItem == 1) {
+		Event* pEvent = reinterpret_cast<Event*>(m_vdata.at(item).p);	
+		std::wstring wstr = ((DateTimeEvent*)pEvent)->GetTitle().c_str();
+		char buffer[255];
+		pfc::stringcvt::convert_wide_to_utf8(buffer, 255, wstr.c_str(), wstr.size());
+		out = buffer;
+	}
+}
+
+// remove mask
+
+void EventListWindow::RemoveMask(pfc::bit_array const& mask) {
+	if (mask.get(footerRow())) return; // footer row cannot be removed
+	auto oldCount = GetItemCount();
+	
+	auto t = mask.find_first(true, 0, GetItemCount());
+	while (t != pfc::infinite_size) {
+		Event* pEvent = reinterpret_cast<Event*>(m_vdata.at(t).p);
+		m_pModel->RemoveEvent(pEvent);
+		t = mask.find_first(true, 0, pfc::infinite_size);
+	}
+
+	pfc::remove_mask_t(m_vdata, mask);
+
+	this->OnItemsRemoved(mask, oldCount);
+}
+
+// request reorder
+
+void EventListWindow::RequestReorder(size_t const* order, size_t count) {
+	// we've been asked to reorder the items, by either drag&drop or cursors+modifiers
+	// we can either reorder as requested, reorder partially if some of the items aren't moveable, or reject the request
+
+	PFC_ASSERT(count == GetItemCount());
+
+	// Footer row cannot be moved
+	if (GetItemCount() > m_vdata.size() && order[footerRow()] != footerRow()) return;
+
+	for (size_t w = 0; w < m_vdata.size(); w++) {
+		if (w != order[w]) {
+			bool done = false;
+			for (size_t wprev = 0; wprev <= w && wprev < m_vdata.size(); wprev++) {
+				if (order[wprev] == w) {
+					done = true;
+					break;
+				}
+			}
+			if (!done) {
+				Event* pEvent = reinterpret_cast<Event*>(m_vdata.at(w).p);
+				m_pModel->SwapEvent(pEvent, w, order[0]);
+			}
+		}
+	}
+
+	pfc::reorder_t(m_vdata, order, count);
+
+	this->OnItemsReordered(order, count);
 }

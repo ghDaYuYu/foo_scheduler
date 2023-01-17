@@ -2,7 +2,8 @@
 #include "pref_page.h"
 #include "service_manager.h"
 
-PreferencesPage::PreferencesPage(preferences_page_callback::ptr callback) : m_callback(callback), m_changed(false)
+PreferencesPage::PreferencesPage(preferences_page_callback::ptr callback) :
+	m_callback(callback), m_changed(false), m_pModel(nullptr)
 {
 	m_pModel.reset(new PrefPageModel(ServiceManager::Instance().GetModel().GetState()));
 
@@ -10,14 +11,19 @@ PreferencesPage::PreferencesPage(preferences_page_callback::ptr callback) : m_ca
 	m_pModel->ConnectModelResetSlot(boost::bind(&PreferencesPage::OnChanged, this));
 }
 
+PreferencesPage::~PreferencesPage() {
+	m_eventList.Detach();
+	m_actionTree.Detach();
+}
+
 t_uint32 PreferencesPage::get_state()
 {
 	t_uint32 state = preferences_state::resettable;
 	
-	if (m_changed) 
+	if (m_changed)
 		state |= preferences_state::changed;
 
-	return state;
+	return state | preferences_state::dark_mode_supported;
 }
 
 void PreferencesPage::apply()
@@ -39,8 +45,14 @@ BOOL PreferencesPage::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 {
 	DoDataExchange(DDX_LOAD);
 
-	m_eventList.InitWindow(m_pModel.get());
-	m_actionLists.Init(m_pModel.get());
+	m_eventList.CreateInDialog(*this, IDC_EVENT_LIST);
+	m_eventList.Init(m_pModel.get());
+
+	m_actionTree.Init(m_hWnd, IDC_ACTION_LIST_TREE, m_pModel.get());
+
+	//dark mode
+	AddDialog(m_hWnd);
+	AddControls(m_hWnd);
 
 	CheckDlgButton(IDC_ENABLED_CHECK, m_pModel->IsSchedulerEnabled());
 

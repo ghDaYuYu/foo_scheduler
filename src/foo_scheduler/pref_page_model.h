@@ -48,6 +48,7 @@ public:
 
 	void MoveEventUp(const Event* pEvent);
 	void MoveEventDown(const Event* pEvent);
+	void SwapEvent(const Event* pEvent, const size_t left, const size_t right);
 
 	//////////////////////////////////////////////////////////////////////////
 	// Actions

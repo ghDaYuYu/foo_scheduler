@@ -3,22 +3,20 @@
 #include "resource.h"
 #include "header_static.h"
 #include "event_list_window.h"
-#include "action_lists_window.h"
+#include "action_tree_window.h"
 #include "pref_page_model.h"
 
 class PreferencesPage :
 	public CDialogImpl<PreferencesPage>,
 	public CWinDataExchange<PreferencesPage>,
-	public preferences_page_instance
+	public preferences_page_instance,
+	public fb2k::CDarkModeHooks
 {
 public:
 	// Constructor - invoked by preferences_page_impl helpers - don't do Create() in here,
 	// preferences_page_impl does this for us.
 	PreferencesPage(preferences_page_callback::ptr callback);
-
-	// Note that we don't bother doing anything regarding destruction of our class.
-	// The host ensures that our dialog is destroyed first, then the last reference
-	// to our preferences_page_instance object is released, causing our object to be deleted.
+	~PreferencesPage();
 
 	// dialog resource ID
 	enum { IDD = IDD_PREF_PAGE };
@@ -36,17 +34,11 @@ private:
 		COMMAND_ID_HANDLER_EX(IDC_BTN_ADD_ACTION_LIST, OnBtnAddActionList)
 		COMMAND_ID_HANDLER_EX(IDC_BTN_SHOW_STATUS_WINDOW, OnBtnShowStatusWindow)
 		COMMAND_ID_HANDLER_EX(IDC_ENABLED_CHECK, OnEnableScheduler)
-
-		REFLECT_NOTIFICATIONS()
+		CHAIN_MSG_MAP_MEMBER(m_actionTree)
 	END_MSG_MAP()
 
 	BEGIN_DDX_MAP(PreferencesPage)
-		DDX_CONTROL(IDC_STATIC_STATUS_HEADER, m_staticStatusControlHeader)
-		DDX_CONTROL(IDC_STATIC_EVENT_LIST_HEADER,  m_staticEventListHeader)
-		DDX_CONTROL(IDC_STATIC_ACTION_LIST_HEADER, m_staticActionListHeader)
-
-		DDX_CONTROL(IDC_EVENT_LIST, m_eventList)
-		DDX_CONTROL(IDC_ACTION_LIST_TREE, m_actionLists)
+		DDX_CONTROL(IDC_ACTION_LIST_TREE, m_actionTree)
 	END_DDX_MAP()
 
 private:
@@ -63,12 +55,8 @@ private:
 private:
 	const preferences_page_callback::ptr m_callback;
 
-	HeaderStatic m_staticStatusControlHeader;
-	HeaderStatic m_staticEventListHeader;
-	HeaderStatic m_staticActionListHeader;
-
 	EventListWindow m_eventList;
-	ActionListsWindow m_actionLists;
+	ActionTreeWindow m_actionTree;
 
 	boost::scoped_ptr<PrefPageModel> m_pModel;
 
@@ -77,7 +65,6 @@ private:
 
 class PreferencesPageImpl : public preferences_page_impl<PreferencesPage>
 {
-	// preferences_page_impl<> helper deals with instantiation of our dialog; inherits from preferences_page_v3.
 public:
 	static const GUID m_guid;
 
@@ -85,4 +72,3 @@ public:
 	virtual GUID get_guid();
 	virtual GUID get_parent_guid();
 };
-

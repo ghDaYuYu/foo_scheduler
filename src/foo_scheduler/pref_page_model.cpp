@@ -106,8 +106,9 @@ boost::signals2::connection PrefPageModel::ConnectActionListRemovedSlot(const Ac
 void PrefPageModel::UpdateActionList(ActionList* pActionList)
 {
 	for (std::size_t i = 0; i < m_modelState.events.size(); ++i)
-		if (m_modelState.events[i].GetActionListGUID() == pActionList->GetGUID())
+		if (m_modelState.events[i].GetActionListGUID() == pActionList->GetGUID()) {
 			m_eventUpdatedSignal(&m_modelState.events[i]);
+		}
 
 	m_actionListUpdatedSignal(pActionList);
 	m_modelChangedSignal();
@@ -214,6 +215,17 @@ void PrefPageModel::MoveEventUp(const Event* pEvent)
 void PrefPageModel::MoveEventDown(const Event* pEvent)
 {
 	MoveEvent(pEvent, false);
+}
+
+void PrefPageModel::SwapEvent(const Event* pEvent, const size_t left, const size_t right) {
+	auto it = std::find_if(m_modelState.events.begin(), m_modelState.events.end(), &boost::lambda::_1 == pEvent);
+	_ASSERTE(it != m_modelState.events.end());
+
+	boost::ptr_vector<Event>::iterator lit = std::begin(m_modelState.events) + left;
+	boost::ptr_vector<Event>::iterator rit = std::begin(m_modelState.events) + right;	
+	boost::swap(lit, rit);
+
+	m_modelChangedSignal();
 }
 
 void PrefPageModel::MoveEvent(const Event* pEvent, bool up)

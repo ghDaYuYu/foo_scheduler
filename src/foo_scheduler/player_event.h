@@ -124,7 +124,7 @@ private:
 // PlayerEventEditor
 //------------------------------------------------------------------------------
 
-class PlayerEventEditor : public CDialogImpl<PlayerEventEditor>
+class PlayerEventEditor : public CDialogImpl<PlayerEventEditor>, public fb2k::CDarkModeHooks
 {
 public:
 	enum { IDD = IDD_PLAYER_EVENT_CONFIG };

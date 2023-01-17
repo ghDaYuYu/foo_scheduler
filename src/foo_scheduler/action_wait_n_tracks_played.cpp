@@ -190,6 +190,10 @@ BOOL ActionWaitNTracksEditor::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 	SetDlgItemInt(IDC_EDIT_N_TRACKS, m_action.GetNumTracks());
 	CenterWindow(GetParent());
 
+	// dark mode
+	AddDialog(m_hWnd);
+	AddControls(m_hWnd);
+
 	return TRUE;
 }
 

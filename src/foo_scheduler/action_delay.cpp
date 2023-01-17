@@ -203,12 +203,16 @@ BOOL ActionDelayEditor::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 	m_delayUnitsCombo = GetDlgItem(IDC_COMBO_DELAY_UNITS);
 	ComboHelpers::InitCombo(m_delayUnitsCombo, comboItems, m_action.GetDelayUnits());
 
-	CUpDownCtrl spin = GetDlgItem(IDC_SPIN_DELAY);
+	CUpDownCtrl spin = ::GetDlgItem(m_hWnd,IDC_SPIN_DELAY);
 
 	spin.SetRange(1, ActionDelay::s_maxDelay);
 	spin.SetPos(m_action.GetDelay());
 
 	CenterWindow(GetParent());
+
+	// dark mode
+	AddDialog(m_hWnd);
+	AddControls(m_hWnd);
 
 	return TRUE;
 }

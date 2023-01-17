@@ -82,7 +82,8 @@ private:
 
 class ActionStartPlaybackEditor :
 	public CDialogImpl<ActionStartPlaybackEditor>,
-	public CWinDataExchange<ActionStartPlaybackEditor>
+	public CWinDataExchange<ActionStartPlaybackEditor>,
+	public fb2k::CDarkModeHooks
 {
 public:
 	enum { IDD = IDD_ACTION_START_PLAYBACK_CONFIG };

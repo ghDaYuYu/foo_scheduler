@@ -177,6 +177,10 @@ BOOL ActionSetPlaybackOrderEditor::OnInitDialog(CWindow wndFocus, LPARAM lInitPa
 
 	CenterWindow(GetParent());
 
+	// dark mode
+	AddDialog(m_hWnd);
+	AddControls(m_hWnd);
+
 	return TRUE;
 }
 

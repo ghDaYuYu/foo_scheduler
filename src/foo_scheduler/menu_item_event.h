@@ -50,7 +50,7 @@ private:
 	GUID m_guid;
 };
 
-class MenuItemEventEditor : public CDialogImpl<MenuItemEventEditor>
+class MenuItemEventEditor : public CDialogImpl<MenuItemEventEditor>, public fb2k::CDarkModeHooks
 {
 public:
 	enum { IDD = IDD_MENU_ITEM_EVENT_CONFIG };

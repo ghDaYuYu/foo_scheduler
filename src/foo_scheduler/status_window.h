@@ -10,8 +10,7 @@ class DateTimeEvent;
 // StatusWindow
 //------------------------------------------------------------------------------
 
-class ListViewWithResizableColumn : public CWindowImpl<ListViewWithResizableColumn, CListViewCtrl>
-{
+class ListViewWithResizableColumn : public CWindowImpl<ListViewWithResizableColumn, CListViewCtrl> {
 private:
 	BEGIN_MSG_MAP(ListViewWithResizableColumn)
 		MSG_WM_SIZE(OnSize)
@@ -29,7 +28,8 @@ class StatusWindow :
 	public CWinDataExchange<StatusWindow>,
 	public CDialogResize<StatusWindow>,
 	public message_filter,
-	public boost::signals2::trackable
+	public boost::signals2::trackable,
+	public fb2k::CDarkModeHooks
 {
 public:
 	enum { IDD = IDD_STATUS_WINDOW };

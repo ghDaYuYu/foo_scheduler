@@ -81,7 +81,7 @@ private:
 // ActionDelayEditor
 //------------------------------------------------------------------------------
 
-class ActionWaitNTracksEditor : public CDialogImpl<ActionWaitNTracksEditor>
+class ActionWaitNTracksEditor : public CDialogImpl<ActionWaitNTracksEditor>, public fb2k::CDarkModeHooks
 {
 public:
 	enum { IDD = IDD_ACTION_WAIT_N_TRACKS_CONFIG };

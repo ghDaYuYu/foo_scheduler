@@ -47,7 +47,7 @@ private:
 	std::wstring m_commandLine;
 };
 
-class ActionLaunchAppEditor : public CDialogImpl<ActionLaunchAppEditor>
+class ActionLaunchAppEditor : public CDialogImpl<ActionLaunchAppEditor>, public fb2k::CDarkModeHooks
 {
 public:
 	enum { IDD = IDD_ACTION_LAUNCH_APP_CONFIG };

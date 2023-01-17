@@ -51,7 +51,7 @@ private:
 // ActionSetPlaybackOrderEditor
 //------------------------------------------------------------------------------
 
-class ActionSetPlaybackOrderEditor : public CDialogImpl<ActionSetPlaybackOrderEditor>
+class ActionSetPlaybackOrderEditor : public CDialogImpl<ActionSetPlaybackOrderEditor>, public fb2k::CDarkModeHooks
 {
 public:
 	enum { IDD = IDD_ACTION_SET_PLAY_ORDER_CONFIG };

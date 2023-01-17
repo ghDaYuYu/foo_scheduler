@@ -64,7 +64,8 @@ private:
 
 class ActionChangePlaylistEditor :
 	public CDialogImpl<ActionChangePlaylistEditor>,
-	public CWinDataExchange<ActionChangePlaylistEditor>
+	public CWinDataExchange<ActionChangePlaylistEditor>,
+	public fb2k::CDarkModeHooks
 {
 public:
 	enum { IDD = IDD_ACTION_CHANGE_PLAYLIST_CONFIG };

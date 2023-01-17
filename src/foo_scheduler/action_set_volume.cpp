@@ -289,7 +289,7 @@ BOOL ActionSetVolumeEditor::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 	m_durationUnitsCombo = GetDlgItem(IDC_COMBO_DURATION_UNITS);
 	ComboHelpers::InitCombo(m_durationUnitsCombo, comboItems, m_action.GetFadeDurationUnits());
 
-	CUpDownCtrl spin = GetDlgItem(IDC_SPIN_DURATION);
+	CUpDownCtrl spin = ::GetDlgItem(m_hWnd, IDC_SPIN_DURATION);
 
 	spin.SetRange(1, ActionSetVolume::s_maxFadeDuration);
 	spin.SetPos(m_action.GetFadeDuration());

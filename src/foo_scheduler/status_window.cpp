@@ -52,6 +52,11 @@ BOOL StatusWindow::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 
 	DoDataExchange(DDX_LOAD);
 	DlgResize_Init(true);
+	cfg_window_placement_status_dlg.on_window_creation(m_hWnd, true);
+
+	//dark mode
+	AddDialog(m_hWnd);
+	AddControls(m_hWnd);
 
 	DWORD dwStyle = LVS_EX_LABELTIP | LVS_EX_DOUBLEBUFFER;
 
@@ -83,6 +88,7 @@ void StatusWindow::OnFinalMessage(HWND /*hWnd*/)
 
 void StatusWindow::OnClose()
 {
+	cfg_window_placement_status_dlg.on_window_destruction(m_hWnd);
 	DestroyWindow();
 }
 

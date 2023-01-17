@@ -215,6 +215,10 @@ BOOL ActionChangePlaylistEditor::OnInitDialog(CWindow wndFocus, LPARAM lInitPara
 	UpdateControlsState();
 	CenterWindow(GetParent());
 
+	// dark mode
+	AddDialog(m_hWnd);
+	AddControls(m_hWnd);
+
 	return TRUE;
 }
 

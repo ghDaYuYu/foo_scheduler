@@ -69,7 +69,7 @@ private:
 // ActionDelayEditor
 //------------------------------------------------------------------------------
 
-class ActionDelayEditor : public CDialogImpl<ActionDelayEditor>
+class ActionDelayEditor : public CDialogImpl<ActionDelayEditor>, public fb2k::CDarkModeHooks
 {
 public:
 	enum { IDD = IDD_ACTION_DELAY_CONFIG };

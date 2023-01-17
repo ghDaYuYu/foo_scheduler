@@ -84,7 +84,7 @@ private:
 	bool m_wakeup;
 };
 
-class DateTimeEventEditor : public CDialogImpl<DateTimeEventEditor>
+class DateTimeEventEditor : public CDialogImpl<DateTimeEventEditor>, public fb2k::CDarkModeHooks
 {
 public:
 	enum { IDD = IDD_DATETIME_EVENT_CONFIG };

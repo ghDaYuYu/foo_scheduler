@@ -350,14 +350,18 @@ DateTimeEventEditor::DateTimeEventEditor(DateTimeEvent* pEvent, PrefPageModel* p
 
 BOOL DateTimeEventEditor::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 {
+
+	m_date = GetDlgItem(IDC_DATE_PICKER);
+	m_time = GetDlgItem(IDC_TIME_PICKER);
+
+	// dark mode
+	AddDialog(m_hWnd);
+	AddControls(m_hWnd, m_date, m_time);
+
 	SetDlgItemText(IDC_EDIT_TITLE, m_pEvent->GetTitle().c_str());
 
 	m_typeCombo = GetDlgItem(IDC_COMBO_DAY);
 	m_finalActionCombo = GetDlgItem(IDC_COMBO_FINAL_ACTION);
-	m_date = GetDlgItem(IDC_DATE_PICKER);
-	m_time = GetDlgItem(IDC_TIME_PICKER);
-
-	CreateWeekDaysControl();
 
 	ComboHelpers::InitCombo(m_typeCombo,
 		boost::assign::list_of<std::pair<std::wstring, int> >
@@ -389,6 +393,8 @@ BOOL DateTimeEventEditor::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 
 	InitTime();
 	CheckDlgButton(IDC_CHECK_WAKEUP, m_pEvent->GetWakeup());
+
+	CreateWeekDaysControl();
 
 	UpdateDayControls();
 

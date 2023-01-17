@@ -81,7 +81,7 @@ private:
 // ActionSetVolumeEditor
 //------------------------------------------------------------------------------
 
-class ActionSetVolumeEditor : public CDialogImpl<ActionSetVolumeEditor>
+class ActionSetVolumeEditor : public CDialogImpl<ActionSetVolumeEditor>, public fb2k::CDarkModeHooks
 {
 public:
 	enum { IDD = IDD_ACTION_SET_VOLUME_CONFIG };

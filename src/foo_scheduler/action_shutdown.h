@@ -84,7 +84,7 @@ private:
 // ActionShutdownEditor
 //------------------------------------------------------------------------------
 
-class ActionShutdownEditor : public CDialogImpl<ActionShutdownEditor>
+class ActionShutdownEditor : public CDialogImpl<ActionShutdownEditor>, public fb2k::CDarkModeHooks
 {
 public:
 	enum { IDD = IDD_ACTION_SHUTDOWN_CONFIG };

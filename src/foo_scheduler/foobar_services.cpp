@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "foobar_services.h"
 #include "service_manager.h"
-#include "definitions.h"
+#include "version.h"
 #include "foobar_stream.h"
 
 //------------------------------------------------------------------------------
@@ -55,7 +55,7 @@ void PluginConfiguration::set_data_raw(stream_reader* p_stream, t_size p_sizehin
 
 	if (readFailed || cfgVersion != PLUGIN_CFG_GLOBAL_VERSION)
 	{
-		console::info(PLUGIN_DLL " : the configuration format is of version 3.x. Upgrade is not supported. "
+		console::info(PLUGIN_FILENAME " : the configuration format is of version 3.x. Upgrade is not supported. "
 			"Resetting configuration.");
 		return;
 	}
@@ -73,9 +73,9 @@ namespace MainMenuItems
 	// SchedulerGroup
 	//------------------------------------------------------------------------------
 
-	// {02be80d3-0eb1-4181-bd01-89f1c114439f} 
-	const GUID SchedulerGroup::m_guid = 
-	{ 0x02be80d3, 0x0eb1, 0x4181, { 0xbd, 0x01, 0x89, 0xf1, 0xc1, 0x14, 0x43, 0x9f } };
+	// {C7B4F372-AFB9-4FB8-BE20-959B949E0646} mod guid
+	const GUID SchedulerGroup::m_guid =
+		{ 0xc7b4f372, 0xafb9, 0x4fb8, { 0xbe, 0x20, 0x95, 0x9b, 0x94, 0x9e, 0x6, 0x46 } };
 
 	SchedulerGroup::SchedulerGroup() : mainmenu_group_impl(m_guid,
 		mainmenu_groups::file_playlist, mainmenu_commands::sort_priority_last)
@@ -86,12 +86,12 @@ namespace MainMenuItems
 	// SchedulerMainPopupMenu
 	//------------------------------------------------------------------------------
 
-	// {9505a8f1-7f94-4c7d-ad2f-3c40b81975c8} 
-	const GUID SchedulerMainPopupMenu::m_guid = 
-	{ 0x9505a8f1, 0x7f94, 0x4c7d, { 0xad, 0x2f, 0x3c, 0x40, 0xb8, 0x19, 0x75, 0xc8 } };
+	// {A8F73E72-8C56-4E70-B770-B952A573ECDF} mod guid
+	const GUID SchedulerMainPopupMenu::m_guid =
+		{ 0xa8f73e72, 0x8c56, 0x4e70, { 0xb7, 0x70, 0xb9, 0x52, 0xa5, 0x73, 0xec, 0xdf } };
 
 	SchedulerMainPopupMenu::SchedulerMainPopupMenu() : mainmenu_group_popup_impl(m_guid,
-		SchedulerGroup::m_guid,	mainmenu_commands::sort_priority_base, "Scheduler")
+		SchedulerGroup::m_guid,	mainmenu_commands::sort_priority_base, PLUGIN_NAME)
 	{
 	}
 
@@ -106,17 +106,18 @@ namespace MainMenuItems
 
 	GUID SchedulerMainPopupCommands::get_command(t_uint32 p_index)
 	{
-		// {7346ec60-7b03-4635-b5e1-aad38bb5e744} 
-		static const GUID guidPreferences = 
-		{ 0x7346ec60, 0x7b03, 0x4635, { 0xb5, 0xe1, 0xaa, 0xd3, 0x8b, 0xb5, 0xe7, 0x44 } };
+		// {FFC07C68-8861-4883-BDBC-792C7B40EC88} mod guid
+		static const GUID guidPreferences =
+			{ 0xffc07c68, 0x8861, 0x4883, { 0xbd, 0xbc, 0x79, 0x2c, 0x7b, 0x40, 0xec, 0x88 } };
 
-		// {569c0186-2951-445e-96ef-7159d8066ec8} 
-		static const GUID guidStatusWindow = 
-		{ 0x569c0186, 0x2951, 0x445e, { 0x96, 0xef, 0x71, 0x59, 0xd8, 0x06, 0x6e, 0xc8 } };
+		// {84E35924-CAC4-4AF6-96E3-61570661EC41} mod guid
+		static const GUID guidStatusWindow =
+			{ 0x84e35924, 0xcac4, 0x4af6, { 0x96, 0xe3, 0x61, 0x57, 0x6, 0x61, 0xec, 0x41 } };
 
-		// {1D16A6EA-365E-4F8C-9D0F-E5A2BCFBDAA2}
-		static const GUID guidStopAllActionLists = 
-		{ 0x1d16a6ea, 0x365e, 0x4f8c, { 0x9d, 0xf, 0xe5, 0xa2, 0xbc, 0xfb, 0xda, 0xa2 } };
+		// {D67D975E-05B8-499A-9B8D-75B9A8875A30} mod guid
+		static const GUID guidStopAllActionLists =
+			{ 0xd67d975e, 0x5b8, 0x499a, { 0x9b, 0x8d, 0x75, 0xb9, 0xa8, 0x87, 0x5a, 0x30 } };
+
 
 		if (p_index == miiPreferences)
 			return guidPreferences;
@@ -175,10 +176,10 @@ namespace MainMenuItems
 	//------------------------------------------------------------------------------
 	// SchedulerActionListsGroup
 	//------------------------------------------------------------------------------
-	
-	// {243b60f4-e16e-401f-a2be-f3b7dd1239f2} 
-	const GUID SchedulerActionListsGroup::m_guid = 
-	{ 0x243b60f4, 0xe16e, 0x401f, { 0xa2, 0xbe, 0xf3, 0xb7, 0xdd, 0x12, 0x39, 0xf2 } };
+
+	// {A080066A-34C8-4AD8-963A-FB2181FDEC04} mod guid
+	const GUID SchedulerActionListsGroup::m_guid =
+		{ 0xa080066a, 0x34c8, 0x4ad8, { 0x96, 0x3a, 0xfb, 0x21, 0x81, 0xfd, 0xec, 0x4 } };
 
 	SchedulerActionListsGroup::SchedulerActionListsGroup() : mainmenu_group_impl(m_guid,
 		SchedulerMainPopupMenu::m_guid, mainmenu_commands::sort_priority_last)

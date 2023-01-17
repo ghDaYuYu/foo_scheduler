@@ -125,13 +125,13 @@ void PreferencesPage::OnEnableScheduler(UINT uNotifyCode, int nID, CWindow wndCt
 // PreferencesPageImpl
 //------------------------------------------------------------------------------
 
-// {c86e2704-ca6e-4467-b48e-f83f2452d2a0}
+// {E6CC8BDA-590C-472A-8375-8C8F1A5CDF74} mod guid
 const GUID PreferencesPageImpl::m_guid =
-	{ 0xc86e2704, 0xca6e, 0x4467, { 0xb4, 0x8e, 0xf8, 0x3f, 0x24, 0x52, 0xd2, 0xa0 } };
+	{ 0xe6cc8bda, 0x590c, 0x472a, { 0x83, 0x75, 0x8c, 0x8f, 0x1a, 0x5c, 0xdf, 0x74 } };
 
 const char* PreferencesPageImpl::get_name()
 {
-	return "Scheduler";
+	return PLUGIN_NAME;
 }
 
 GUID PreferencesPageImpl::get_guid()

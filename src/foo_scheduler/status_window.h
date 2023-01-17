@@ -62,13 +62,7 @@ private:
 		NOTIFY_HANDLER_EX(IDC_ACT_SESSIONS_LIST, LVN_GETDISPINFO, OnActSessionsListGetDispInfo)
 		NOTIFY_HANDLER_EX(IDC_STATUS_DATE_TIME_EVENTS_LIST, LVN_GETDISPINFO, OnPendingEventsGetDispInfo)
 		NOTIFY_HANDLER_EX(IDC_ACT_SESSIONS_LIST, NM_DBLCLK, OnActSessionsDblClick)
-
 		REFLECT_NOTIFICATIONS()
-
-		// m_sizeTracker & m_posTracker need WM_INITDIALOG, WM_CREATE, WM_DESTROY, WM_SIZE.
-		// Use SetMsgHandled(false) in these handlers to allow the lines below process them too.
-		CHAIN_MSG_MAP_MEMBER(m_posTracker)
-		CHAIN_MSG_MAP_MEMBER(m_sizeTracker)
 		CHAIN_MSG_MAP(CDialogResize<StatusWindow>)
 	END_MSG_MAP()
 
@@ -103,9 +97,6 @@ private:
 
 private:
 	boost::function<void ()> m_onDestroyCallback;
-
-	cfgDialogSizeTracker m_sizeTracker;
-	cfgDialogPositionTracker m_posTracker;
 
 	HeaderStatic m_staticStatusDateTimeEventsHeader;
 	HeaderStatic m_staticActiveSessionsHeader;

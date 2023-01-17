@@ -1,14 +1,14 @@
 #include "pch.h"
-#include "definitions.h"
+#include "version.h"
 #include "foobar_services.h"
 #include "pref_page.h"
 
 DECLARE_COMPONENT_VERSION(PLUGIN_NAME, PLUGIN_VERSION, PLUGIN_ABOUT)
-VALIDATE_COMPONENT_FILENAME("foo_scheduler.dll")
+VALIDATE_COMPONENT_FILENAME(PLUGIN_DLLFILENAME)
 
-// {d1321dbc-9511-43e1-a0ee-5f9be0402ad0} 
+// {0F2265AC-38A4-4192-AE8A-508969E49280} mod guid
 static const GUID g_guidPluginCfg =
-	{0xd1321dbc, 0x9511, 0x43e1, {0xa0, 0xee, 0x5f, 0x9b, 0xe0, 0x40, 0x2a, 0xd0}};
+	{ 0xf2265ac, 0x38a4, 0x4192, { 0xae, 0x8a, 0x50, 0x89, 0x69, 0xe4, 0x92, 0x80 } };
 
 static PluginConfiguration g_cfgPlugin(g_guidPluginCfg);
 

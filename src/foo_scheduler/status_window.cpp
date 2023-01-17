@@ -4,22 +4,12 @@
 #include "date_time_events_manager.h"
 #include "action_list_exec_session.h"
 #include "date_time_event.h"
-
-// {967599e9-9808-49ea-b58b-d95ef843b157} 
-static const GUID g_statusWindowSizeGUID = 
-{ 0x967599e9, 0x9808, 0x49ea, { 0xb5, 0x8b, 0xd9, 0x5e, 0xf8, 0x43, 0xb1, 0x57 } };
-
-static cfgWindowSize g_cfgStatusWindowSize(g_statusWindowSizeGUID);
-
-// {367533c7-f887-4dc6-afa6-bbabf071d2a1} 
-static const GUID g_statusWindowPosGUID = 
-{ 0x367533c7, 0xf887, 0x4dc6, { 0xaf, 0xa6, 0xbb, 0xab, 0xf0, 0x71, 0xd2, 0xa1 } };
-
-static cfgDialogPosition g_cfgStatusWindowPos(g_statusWindowPosGUID);
+//mod guid
+static const GUID guid_cfg_window_placement_status_dlg = { 0xc81e877b, 0xf8aa, 0x4a8d, { 0x92, 0xb3, 0x98, 0xa, 0x8c, 0x17, 0x91, 0xc3 } };
+static cfg_window_placement cfg_window_placement_status_dlg(guid_cfg_window_placement_status_dlg);
 
 StatusWindow::StatusWindow(HWND parent, const boost::function<void ()>& onDestroyCallback) :
-	m_onDestroyCallback(onDestroyCallback),
-	m_sizeTracker(g_cfgStatusWindowSize), m_posTracker(g_cfgStatusWindowPos)
+	m_onDestroyCallback(onDestroyCallback)
 {
 	ServiceManager::Instance().GetDateTimeEventsManager().ConnectPendingEventsUpdatedSlot(
 		boost::bind(&StatusWindow::UpdatePendingEvents, this));
@@ -69,9 +59,6 @@ BOOL StatusWindow::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 	m_activeSessions.SetExtendedListViewStyle(dwStyle, dwStyle);
 	m_activeSessions.AddColumn(L"", 0);
 	m_activeSessions.SetColumnWidth(0, LVSCW_AUTOSIZE_USEHEADER);
-
-	::SetWindowTheme(m_dateTimeEvents.m_hWnd, L"explorer", 0);
-	::SetWindowTheme(m_activeSessions.m_hWnd, L"explorer", 0);
 
 	UpdatePendingEvents();
 	UpdateActiveSessions();

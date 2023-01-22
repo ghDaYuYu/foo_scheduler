@@ -93,6 +93,11 @@ public:
 		ID_TP_POPUP_N1M = 1,
 		ID_TP_POPUP_N2M,
 		ID_TP_POPUP_N3M,
+		ID_TP_POPUP_N15M,
+		ID_TP_POPUP_N30M,
+		ID_TP_POPUP_N45M,
+		ID_TP_POPUP_N60M,
+		ID_TP_POPUP_RSECS,
 	};
 
 	DateTimeEventEditor(DateTimeEvent* pEvent, PrefPageModel* pPrefPageModel);

@@ -1,4 +1,6 @@
 #include "pch.h"
+#include <chrono>
+#include <ctime>    
 #include "date_time_event.h"
 #include "pref_page_model.h"
 #include "combo_helpers.h"
@@ -574,6 +576,13 @@ bool DateTimeEventEditor::context_menu_show(HWND wnd, LPARAM lParamPos)
 		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N1M, "Now +&1'");
 		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N2M, "Now +&2'");
 		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N3M, "Now +&3'");
+		uAppendMenu(menu, MF_SEPARATOR, 0, "");
+		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N15M, "Now +&15'");
+		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N30M, "Now +&30'");
+		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N45M, "Now +&45'");
+		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N60M, "Now +&60'");
+		uAppendMenu(menu, MF_SEPARATOR, 0, "");
+		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_RSECS, "Round &seconds'");
 
 		int cmd = TrackPopupMenu(menu, TPM_RIGHTBUTTON | TPM_NONOTIFY | TPM_RETURNCMD, point.x, point.y, 0, wnd, 0);
 		DestroyMenu(menu);
@@ -586,23 +595,43 @@ bool DateTimeEventEditor::context_menu_show(HWND wnd, LPARAM lParamPos)
 
 bool DateTimeEventEditor::context_menu_switch(HWND wnd, POINT point, int cmd) {
 
-	CDateTimePickerCtrl atime = (CDateTimePickerCtrl)uGetDlgItem(IDC_TIME_PICKER);
-
 	SYSTEMTIME st;
-	GetLocalTime(&st);
+	
+	size_t minute_offset = 0;
+	bool reset_seconds = false;
 
 	switch (cmd)
 	{
 	case ID_TP_POPUP_N1M: {
-		st.wMinute += 1;
+		minute_offset += 1;
 		break;
 	}
 	case ID_TP_POPUP_N2M: {
-		st.wMinute += 2;
+		minute_offset += 2;
 		break;
 	}
 	case ID_TP_POPUP_N3M: {
-		st.wMinute += 3;
+		minute_offset += 3;
+		break;
+	}
+	case ID_TP_POPUP_N15M: {
+		minute_offset += 15;
+		break;
+	}
+	case ID_TP_POPUP_N30M: {
+		minute_offset += 30;
+		break;
+	}
+	case ID_TP_POPUP_N45M: {
+		minute_offset += 45;
+		break;
+	}
+	case ID_TP_POPUP_N60M: {
+		minute_offset += 60;
+		break;
+	}
+	case ID_TP_POPUP_RSECS: {
+		reset_seconds = true;
 		break;
 	}
 	default: {
@@ -610,7 +639,45 @@ bool DateTimeEventEditor::context_menu_switch(HWND wnd, POINT point, int cmd) {
 	}
 	} //end switch
 
-	atime.SetSystemTime(GDT_VALID, &st);
+	std::chrono::system_clock::time_point start;
+
+	if (reset_seconds) {
+
+		m_time.GetSystemTime(&st);
+
+		if (st.wSecond >= 30) {
+			minute_offset = 1;
+		}
+
+		struct tm tm = {0};
+		tm.tm_year = st.wYear - 1900;
+		tm.tm_mon = st.wMonth;
+		tm.tm_mday = st.wDay;
+		tm.tm_hour = st.wHour;
+		tm.tm_min = st.wMinute;
+		tm.tm_sec = 0;
+		time_t tt = mktime(&tm);
+
+		start = std::chrono::system_clock::from_time_t(tt);
+	}
+	else {
+		GetLocalTime(&st);
+		start = std::chrono::system_clock::now();	
+	}
+
+	const std::chrono::seconds sec{ minute_offset * 60 };
+	time_t mynow = std::chrono::system_clock::to_time_t(start + sec);
+
+	std::tm bt{};
+	localtime_s(&bt, &mynow);
+
+	st.wHour = bt.tm_hour;
+	st.wMinute = bt.tm_min;
+	st.wSecond = bt.tm_sec;
+	st.wMilliseconds = reset_seconds ? 0 : st.wMilliseconds;
+
+	m_time.SetSystemTime(GDT_VALID, &st);
+
 	return false;
 }
 

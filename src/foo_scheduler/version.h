@@ -30,17 +30,23 @@
 
 #define PLUGIN_ABOUT \
 	"Build date: " __DATE__ "\n\n" \
+"Component modded by DaYuyu.\n" \
+"Original Component by Andrew Smolko.\n" \
+"\n" \
 	"Copyright (C) 2006-2023 Andrew Smolko.\n" \
 	"All rights reserved.\n" \
     "\n" \
-    "Changelog:\n" \
-    "\n" \
+"Acknowledgements:\n" \
+"Thanks to Andrew Smolko for developing the foo_scheduler project (up to version 4.19).\n" \
+"\n" \
+"Changelog:\n" \
+  "\n" \
   "= 4.19.1 mod by Dayuyu\n" \
   "* Component renamed 'Scheduler Mod'.\n" \
   "* New 32/64bit installer.\n" \
   "* Event list drag & drop.\n" \
-  "* Added time event context menu initializer.\n" \
-  "* Dark mode.\n" \
+  "* Added date/time event context menu (timer initializer).\n" \
+  "* Added dark mode.\n" \
   "\n" \
 	"= 4.19\n" \
   "* Added 'Restart after completion' option to action list.\n" \

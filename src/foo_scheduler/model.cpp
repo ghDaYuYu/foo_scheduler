@@ -61,9 +61,9 @@ void Model::Load(foobar_stream_reader& stream)
 	{
 		for (int i = 0; i < block.actionLists.GetSize(); ++i)
 		{
-			std::auto_ptr<ActionList> pActionList(new ActionList);
+			std::unique_ptr<ActionList> pActionList(new ActionList);
 			pActionList->LoadFromS11nBlock(block.actionLists.GetAt(i));
-			m_modelState.actionLists.push_back(pActionList);
+			m_modelState.actionLists.push_back(std::move(pActionList));
 		}
 	}
 

@@ -73,7 +73,7 @@ public:
 	typedef boost::signals2::signal<void (ActionList*, IAction*)> ActionUpdatedSignal;
 	typedef boost::signals2::signal<void (ActionList*, IAction*)> ActionRemovedSignal;
 
-	void AddActionToActionList(ActionList* pActionList, std::auto_ptr<IAction> pAction);
+	void AddActionToActionList(ActionList* pActionList, std::unique_ptr<IAction> pAction);
 	void UpdateAction(ActionList* pActionList, IAction* pAction);
 	void RemoveAction(ActionList* pActionList, IAction* pAction);
 

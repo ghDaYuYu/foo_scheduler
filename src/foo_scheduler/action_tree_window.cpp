@@ -125,12 +125,12 @@ void ActionTreeWindow::ShowActionListContextMenu(CTreeItem ti, const CPoint& pnt
 
 	default:
 		{
-			std::auto_ptr<IAction> pNewAction(actionPrototypes[uCmdID - 1]->Clone());
+			std::unique_ptr<IAction> pNewAction(actionPrototypes[uCmdID - 1]->Clone());
 
 			if (pNewAction->HasConfigDialog() && !pNewAction->ShowConfigDialog(*this))
 				return;
 
-			m_pModel->AddActionToActionList(pActionList, pNewAction);
+			m_pModel->AddActionToActionList(pActionList, std::move(pNewAction));
 		}
 		break;
 	}

@@ -33,7 +33,7 @@ public:
 
 	std::vector<IAction*> GetActions();
 
-	void AddAction(std::auto_ptr<IAction> pAction);
+	void AddAction(std::unique_ptr<IAction> pAction);
 	ActionsContainer::auto_type RemoveAction(IAction* pAction);
 
 	bool CanMoveActionUp(const IAction* pAction) const;

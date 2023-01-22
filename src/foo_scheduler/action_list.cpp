@@ -66,9 +66,9 @@ void ActionList::SetRestartAfterCompletion(bool restart)
 	m_restartAfterCompletion = restart;
 }
 
-void ActionList::AddAction(std::auto_ptr<IAction> pAction)
+void ActionList::AddAction(std::unique_ptr<IAction> pAction)
 {
-	m_actions.push_back(pAction);
+	m_actions.push_back(std::move(pAction));
 }
 
 ActionList* ActionList::Clone() const

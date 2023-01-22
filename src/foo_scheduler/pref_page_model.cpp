@@ -129,10 +129,10 @@ const ModelState& PrefPageModel::GetState() const
 	return m_modelState;
 }
 
-void PrefPageModel::AddActionToActionList(ActionList* pActionList, std::auto_ptr<IAction> pAction)
+void PrefPageModel::AddActionToActionList(ActionList* pActionList, std::unique_ptr<IAction> pAction)
 {
 	IAction* pA = pAction.get();
-	pActionList->AddAction(pAction);
+	pActionList->AddAction(std::move(pAction));
 
 	m_actionAddedSignal(pActionList, pA);
 	m_modelChangedSignal();

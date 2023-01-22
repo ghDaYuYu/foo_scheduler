@@ -75,16 +75,15 @@ private:
 
 private:
 	BEGIN_MSG_MAP(ActionTreeWindow)
-		MSG_WM_CONTEXTMENU(OnContextMenu)
-		DEFAULT_REFLECTION_HANDLER()
+		MSG_WM_LBUTTONDBLCLK(OnLButtonDblClk)
+		MESSAGE_HANDLER(WM_CONTEXTMENU, OnContextMenu)
 	END_MSG_MAP()
 
 	LRESULT OnDeleteItem(LPNMHDR pnmh);
 
 	void OnLButtonDblClk(UINT nFlags, CPoint point);
-	void OnRButtonDown(UINT nFlags, CPoint point);
-	void OnContextMenu(CWindow wnd, CPoint point);
-
+	LRESULT OnContextMenu(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	void ShowContextMenu(UINT nFlags, CPoint point);
 private:
 	PrefPageModel* m_pModel;
 	HWND m_hwndTree;

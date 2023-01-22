@@ -355,7 +355,7 @@ void ActionTreeWindow::OnModelReset()
 	DeleteAllItems();
 }
 
-void ActionTreeWindow::OnRButtonDown(UINT nFlags, CPoint point)
+void ActionTreeWindow::ShowContextMenu(UINT nFlags, CPoint point)
 {
 	UINT nHitFlags;
 	CTreeItem tiHit = HitTest(point, &nHitFlags);
@@ -372,28 +372,42 @@ void ActionTreeWindow::OnRButtonDown(UINT nFlags, CPoint point)
 	ShowItemContextMenu(tiHit, point);
 }
 
-void ActionTreeWindow::OnContextMenu(CWindow wnd, CPoint point)
-{
-	CTreeItem ti;
+LRESULT ActionTreeWindow::OnContextMenu(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) {
+	bHandled = FALSE;
 
-	if (point.x < 0 && point.y < 0)
+	HWND hwndCtrl = (HWND)wParam;
+	if (hwndCtrl != m_hWnd) return FALSE;
+
+	CPoint point;
+
+	bool vkapps = lParam == -1;
+
+	if (vkapps)
 	{
-		ti = GetSelectedItem();
-
-		if (ti.IsNull())
-			return;
-
-		CRect itemRect;
-		GetItemRect(ti, itemRect, TRUE);
-
-		point.x = itemRect.left;
-		point.y = itemRect.bottom;
-
-		ShowItemContextMenu(ti, point);
+		::GetCursorPos(&point);
 	}
-	else
-	{
-		ScreenToClient(&point);
-		OnRButtonDown(0, point);
+	else {
+		point = CPoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 	}
+
+	CTreeItem ti = GetSelectedItem();
+	if (ti) {
+		if (point.x < 0 && point.y < 0)
+		{
+			CRect itemRect;
+			GetItemRect(ti, itemRect, TRUE);
+
+			point.x = itemRect.left;
+			point.y = itemRect.bottom;
+
+			ShowItemContextMenu(ti, point);
+		}
+		else
+		{
+			ScreenToClient(&point);
+			ShowContextMenu(0, point);
+		}
+	}
+	bHandled = TRUE;
+	return FALSE;
 }

@@ -286,7 +286,7 @@ void PlayerEventEditor::CreateStopReasonsControl()
 	DWORD dwStyle = LVS_EX_LABELTIP | LVS_EX_DOUBLEBUFFER;
 	m_stopReasons.SetExtendedListViewStyle(dwStyle, dwStyle);
 
-	::SetWindowTheme(m_stopReasons.m_hWnd, L"explorer", 0);
+	//::SetWindowTheme(m_stopReasons.m_hWnd, L"explorer", 0);
 
 	CRect rect;
 	m_stopReasons.GetClientRect(rect);

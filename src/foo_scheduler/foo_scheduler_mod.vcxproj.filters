@@ -1,0 +1,376 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="timers_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="status_window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="service_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="scope_exit_function.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="s11n_blocks.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="root_controller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ref_counted.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="prototypes_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pref_page_model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pref_page.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="popup_tooltip_message.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="player_events_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="player_event_s11n_block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="player_event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="menu_item_events_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="menu_item_event_s11n_block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="menu_item_event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="header_static.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="generate_duplicate_name.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="foobar_stream.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="foobar_services.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="event_visitor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="event_s11n_block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="event_list_window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="duration_units.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="date_time_events_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="date_time_event_s11n_block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="date_time_event.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="combo_helpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="async_call.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_wait_n_tracks_played_s11n_block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_wait_n_tracks_played.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_stop_playback_s11n_block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_stop_playback.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_stop_action_lists_s11n_block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_stop_action_lists.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_start_playback_s11n_block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_start_playback.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_shutdown_s11n_block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_shutdown.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_set_volume_s11n_block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_set_volume.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_set_playback_order_s11n_block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_set_playback_order.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_save_playback_state_s11n_block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_save_playback_state.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_s11n_block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_prev_track_s11n_block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_prev_track.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_pause_playback_s11n_block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_pause_playback.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_next_track_s11n_block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_next_track.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_mute_s11n_block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_mute.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_tree_window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_list_s11n_block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_list_exec_session.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_launch_app_s11n_block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_launch_app.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_exit_foobar_s11n_block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_exit_foobar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_exec_session.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_delay_s11n_block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_delay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_change_playlist_s11n_block.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action_change_playlist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="action.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="action_change_playlist.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="action_delay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="action_exit_foobar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="action_launch_app.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="action_list.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="action_list_exec_session.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="action_tree_window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="action_mute.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="action_next_track.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="action_pause_playback.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="action_prev_track.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="action_save_playback_state.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="action_set_playback_order.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="action_set_volume.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="action_shutdown.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="action_start_playback.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="action_stop_action_lists.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="action_stop_playback.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="action_wait_n_tracks_played.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="date_time_event.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="date_time_events_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="event.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="event_list_window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="foobar_services.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="header_static.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="menu_item_event.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="menu_item_events_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="player_event.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="player_events_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="popup_tooltip_message.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pref_page.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pref_page_model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="root_controller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="s11n_blocks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="service_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="status_window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="timers_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="foo_scheduler_mod.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="foo_scheduler_mod_ver.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="foo_scheduler_mod.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

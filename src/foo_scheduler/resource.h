@@ -18,7 +18,6 @@
 #define IDD_ACTION_WAIT_N_TRACKS        117
 #define IDD_ACTION_WAIT_N_TRACKS_CONFIG 117
 #define IDC_STATIC_GLOBAL_OPTIONS       1001
-#define IDC_CHECK_ENABLED               1002
 #define IDC_BTN_ADD_ACTION_LIST         1003
 #define IDC_BTN_ADD_EVENT               1004
 #define IDC_EVENT_LIST                  1005

@@ -151,10 +151,10 @@ void ActionList::LoadFromS11nBlock(const ActionListS11nBlock& block)
 			if (!pPrototype)
 				continue;
 
-			std::auto_ptr<IAction> pAction(pPrototype->Clone());
+			std::unique_ptr<IAction> pAction(pPrototype->Clone());
 			pAction->LoadFromS11nBlock(actionBlock);
 
-			m_actions.push_back(pAction);
+			m_actions.push_back(std::move(pAction));
 		}
 	}
 

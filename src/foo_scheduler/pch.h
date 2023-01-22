@@ -14,8 +14,6 @@
 #define _WIN32_IE 0x0600
 #endif
 
-#include "targetver.h"
-
 #pragma warning(disable: 4996)
 
 #include <CommCtrl.h>

@@ -60,6 +60,15 @@ private:
 
 std::vector<data_t> m_vdata;
 
+void EventListWindow::SaveModelColumns() {
+
+	std::vector<int> cw;
+	cw.push_back(static_cast<int>(GetColumnWidthF(1)));
+	cw.push_back(static_cast<int>(GetColumnWidthF(2)));
+
+	ServiceManager::Instance().GetModel().SetEventsWindowColumnsWidths(cw);
+}
+
 EventListWindow::~EventListWindow()
 {
 	for (auto& w : m_vdata) {
@@ -325,9 +334,22 @@ void EventListWindow::InitColumns()
 
 	auto scw = GetSystemMetrics(SM_CXVSCROLL);
 
-	AddColumnEx("", scw);
-	AddColumnEx("Event", (rcList.Width() * 2) / 3);
-	AddColumn("Action list", UINT32_MAX);
+	// Using global model to request columns' widths.
+	std::vector<int> cw = ServiceManager::Instance().GetModel().GetEventsWindowColumnsWidths();
+
+	if (cw.empty())
+	{
+		AddColumnEx("", scw);
+		AddColumnEx("Event", (rcList.Width() * 2) / 3);
+		AddColumn("Action list", UINT32_MAX);
+	}
+	else
+	{
+		_ASSERTE(cw.size() == 2);
+		AddColumnEx("", scw);
+		AddColumnEx("Event", cw[0]);
+		AddColumn("Action list", cw[1]);
+	}
 }
 
 void EventListWindow::InsertEventAtPos(size_t pos, const Event* pEvent)

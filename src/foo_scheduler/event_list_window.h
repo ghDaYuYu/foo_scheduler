@@ -179,6 +179,7 @@ private:
 	void OnModelReset();
 
 	void InitColumns();
+	void SaveModelColumns();
 
 	// Returns index of the item that has been added.
 	size_t AddNewEvent(Event* pNewEvent);
@@ -210,6 +211,9 @@ private:
 		return 0;
 	}
 
+	void OnDestroy() {
+		SaveModelColumns();
+	}
 	void OnContextMenu(CWindow wnd, CPoint point);
 	void ItemAction(size_t item);
 

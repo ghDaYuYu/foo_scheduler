@@ -191,7 +191,9 @@ void PlayerEvent::SetStopReasons(const StopReasons& stopReasons)
 
 std::unique_ptr<Event> PlayerEvent::CreateFromPrototype() const
 {
-	return Clone();
+	std::unique_ptr<Event>pClone(new PlayerEvent(*this));
+	pClone->NewEventGUID();
+	return pClone;
 }
 
 namespace

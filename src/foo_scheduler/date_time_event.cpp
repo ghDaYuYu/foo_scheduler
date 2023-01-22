@@ -148,6 +148,7 @@ void DateTimeEvent::SetWakeup(bool val)
 std::unique_ptr<DateTimeEvent> DateTimeEvent::Duplicate(const std::wstring &newTitle) const
 {
     std::unique_ptr<DateTimeEvent> result(new DateTimeEvent(*this));
+	result->NewEventGUID();
     result->SetTitle(newTitle);
     return result;
 }
@@ -329,7 +330,9 @@ void DateTimeEvent::SetFinalAction(EFinalAction val)
 
 std::unique_ptr<Event> DateTimeEvent::CreateFromPrototype() const
 {
-	return Clone();
+	std::unique_ptr<Event>pClone(new DateTimeEvent(*this));
+	pClone->NewEventGUID();
+	return pClone;
 }
 
 namespace

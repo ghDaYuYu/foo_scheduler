@@ -40,14 +40,14 @@ private:
 	friend class MenuItemEventEditor;
 	void SetFinalAction(EFinalAction finalAction);
 	void SetMenuItemName(const std::wstring& menuItemName);
-    void GenerateGUID();
+  void GenerateMenuItemGUID();
 
 private:
 	MenuItemEvent(const MenuItemEvent& rhs);
 
 	std::wstring m_menuItemName;
 	EFinalAction m_finalAction;
-	GUID m_guid;
+	GUID m_menuItemGUID;
 };
 
 class MenuItemEventEditor : public CDialogImpl<MenuItemEventEditor>, public fb2k::CDarkModeHooks

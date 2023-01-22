@@ -13,7 +13,7 @@ ActionList::ActionList()
 }
 
 ActionList::ActionList(const ActionList& rhs) :
-	m_guid(rhs.m_guid),
+	m_actionListGUID(rhs.m_actionListGUID),
 	m_name(rhs.m_name),
 	m_actions(rhs.m_actions),
 	m_restartAfterCompletion(rhs.m_restartAfterCompletion)
@@ -22,7 +22,7 @@ ActionList::ActionList(const ActionList& rhs) :
 
 void ActionList::CreateGUID()
 {
-	::UuidCreate(&m_guid);
+	::UuidCreate(&m_actionListGUID);
 }
 
 bool ActionList::ShowConfigDialog(CWindow parent, PrefPageModel* pPrefPageModel)
@@ -128,12 +128,12 @@ void ActionList::MoveAction(const IAction* pAction, bool up)
 
 const GUID& ActionList::GetGUID() const
 {
-	return m_guid;
+	return m_actionListGUID;
 }
 
 void ActionList::LoadFromS11nBlock(const ActionListS11nBlock& block)
 {
-	block.guid.GetValueIfExists(m_guid);
+	block.guid.GetValueIfExists(m_actionListGUID);
 
 	if (block.name.Exists())
 		m_name = pfc::stringcvt::string_wide_from_utf8(block.name.GetValue()).get_ptr();
@@ -164,7 +164,7 @@ void ActionList::LoadFromS11nBlock(const ActionListS11nBlock& block)
 
 void ActionList::SaveToS11nBlock(ActionListS11nBlock& block) const
 {
-	block.guid.SetValue(m_guid);
+	block.guid.SetValue(m_actionListGUID);
 	block.name.SetValue(pfc::stringcvt::string_utf8_from_wide(m_name.c_str()).toString());
 
 	for (std::size_t i = 0; i < m_actions.size(); ++i)

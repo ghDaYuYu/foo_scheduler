@@ -57,21 +57,21 @@ void MenuItemEvent::SetMenuItemName(const std::wstring& menuItemName)
 	m_menuItemName = menuItemName;
 }
 
-void MenuItemEvent::GenerateGUID()
+void MenuItemEvent::GenerateMenuItemGUID()
 {
-    UuidCreate(&m_guid);
+    UuidCreate(&m_menuItemGUID);
 }
 
 MenuItemEvent::MenuItemEvent() : m_finalAction(finalActionReenable)
 {
-    GenerateGUID();
+    GenerateMenuItemGUID();
 }
 
 MenuItemEvent::MenuItemEvent(const MenuItemEvent& rhs) :
 	Event(rhs),
 	m_menuItemName(rhs.m_menuItemName),
 	m_finalAction(rhs.m_finalAction),
-	m_guid(rhs.m_guid)
+	m_menuItemGUID(rhs.m_menuItemGUID)
 {
 
 }
@@ -83,14 +83,15 @@ bool MenuItemEvent::ShowConfigDialog(CWindow parent, PrefPageModel* pPrefPageMod
 
 GUID MenuItemEvent::GetGUID() const
 {
-	return m_guid;
+	return m_menuItemGUID;
 }
 
 std::unique_ptr<MenuItemEvent> MenuItemEvent::Duplicate(const std::wstring &newMenuItemName) const
 {
     std::unique_ptr<MenuItemEvent> result(new MenuItemEvent(*this));
+	result->NewEventGUID(); //event instance
     result->SetMenuItemName(newMenuItemName);
-    result->GenerateGUID();
+    result->GenerateMenuItemGUID(); //ui
     return result;
 }
 
@@ -130,7 +131,7 @@ void MenuItemEvent::LoadFromS11nBlock(const EventS11nBlock& block)
 	if (b.finalAction.Exists())
 		m_finalAction = static_cast<EFinalAction>(b.finalAction.GetValue());
 
-	b.guid.GetValueIfExists(m_guid);
+	b.guid.GetValueIfExists(m_menuItemGUID);
 }
 
 void MenuItemEvent::SaveToS11nBlock(EventS11nBlock& block) const
@@ -139,7 +140,7 @@ void MenuItemEvent::SaveToS11nBlock(EventS11nBlock& block) const
 
 	b.menuItemName.SetValue(pfc::stringcvt::string_utf8_from_wide(m_menuItemName.c_str()).toString());
 	b.finalAction.SetValue(m_finalAction);
-	b.guid.SetValue(m_guid);
+	b.guid.SetValue(m_menuItemGUID);
 
 	block.menuItemEvent.SetValue(b);
 }
@@ -166,9 +167,9 @@ int MenuItemEvent::GetPriority() const
 std::unique_ptr<Event> MenuItemEvent::CreateFromPrototype() const
 {
     std::unique_ptr<MenuItemEvent> pClone(new MenuItemEvent(*this));
-	
+	pClone->NewEventGUID();
 	// It's important to change uuid, otherwise there may be problems with keyboard shortcuts.
-    pClone->GenerateGUID();
+    pClone->GenerateMenuItemGUID();
 
 	return pClone;
 }

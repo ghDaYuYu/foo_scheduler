@@ -48,10 +48,10 @@ public:
 	bool GetWakeup() const;
 	void SetWakeup(bool val);
 
-    std::unique_ptr<DateTimeEvent> Duplicate(const std::wstring &newTitle) const;
+	std::unique_ptr<DateTimeEvent> Duplicate(const std::wstring &newTitle) const;
 
 public: // Event
-    GUID GetPrototypeGUID() const override;
+	GUID GetPrototypeGUID() const override;
 	int GetPriority() const override;
 	std::wstring GetName() const override;
 	std::wstring GetDescription() const override;
@@ -61,7 +61,7 @@ public: // Event
 	std::unique_ptr<Event> CreateFromPrototype() const override;
 	void LoadFromS11nBlock(const EventS11nBlock& block) override;
 	void SaveToS11nBlock(EventS11nBlock& block) const override;
-    void ApplyVisitor(IEventVisitor& visitor) override;
+	void ApplyVisitor(IEventVisitor& visitor) override;
 
 private:
 	DateTimeEvent(const DateTimeEvent& rhs);

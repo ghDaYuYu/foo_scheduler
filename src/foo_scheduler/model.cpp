@@ -43,9 +43,9 @@ void Model::Load(foobar_stream_reader& stream)
 		{
 			const EventS11nBlock& eventBlock = block.events.GetAt(i);
 
-			// eventGUID is a required field, unnecessary to check if it exists.
+			// protoGUID is a required field, unnecessary to check if it exists.
 			Event* pPrototype = ServiceManager::Instance().GetEventPrototypesManager().
-				GetPrototypeByGUID(eventBlock.eventGUID.GetValue());
+				GetPrototypeByGUID(eventBlock.protoGUID.GetValue());
 
 			if (!pPrototype)
 				continue;
@@ -84,7 +84,8 @@ void Model::Save(foobar_stream_writer& stream) const
 	for (std::size_t i = 0; i < m_modelState.events.size(); ++i)
 	{
 		EventS11nBlock eventBlock;
-		eventBlock.eventGUID.SetValue(m_modelState.events[i].GetPrototypeGUID());
+		eventBlock.eventGUID.SetValue(m_modelState.events[i].GetEventGUID());
+		eventBlock.protoGUID.SetValue(m_modelState.events[i].GetPrototypeGUID());
 
 		m_modelState.events[i].Save(eventBlock);
 		block.events.Add(eventBlock);

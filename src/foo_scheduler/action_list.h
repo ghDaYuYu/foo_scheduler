@@ -54,7 +54,7 @@ private:
 	void MoveAction(const IAction* pAction, bool up);
 
 private:
-	GUID m_guid;
+	GUID m_actionListGUID;
 	std::wstring m_name;
 	bool m_restartAfterCompletion = false;
 

@@ -13,6 +13,8 @@ public:
 	bool IsEnabled() const;
 	void Enable(bool enable);
 
+	const GUID& GetEventGUID() const;
+	void NewEventGUID();
 	const GUID& GetActionListGUID() const;
 	void SetActionListGUID(const GUID& guid);
 
@@ -47,6 +49,7 @@ protected:
 	
 private:
 	bool m_enabled;
+	GUID m_eventGUID;
 	GUID m_actionListGUID;
 };
 

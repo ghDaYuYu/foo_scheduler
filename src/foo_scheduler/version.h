@@ -38,7 +38,7 @@
   "= 4.19.1 mod by Dayuyu\n" \
   "* Component renamed 'Scheduler Mod'.\n" \
   "* New 32/64bit installer.\n" \
-  "* Action list drag & drop.\n" \
+  "* Event list drag & drop.\n" \
   "* Added time event context menu initializer.\n" \
   "* Dark mode.\n" \
   "\n" \

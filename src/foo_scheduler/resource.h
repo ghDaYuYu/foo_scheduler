@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by foo_scheduler.rc
+// Used by foo_scheduler_mod.rc
 //
 #define IDD_STATUS_WINDOW               101
 #define IDD_MENU_ITEM_EVENT_CONFIG      102
@@ -48,10 +48,8 @@
 #define IDC_STATUS_DATE_TIME_EVENTS_LIST 1055
 #define IDC_STATUS_DATE_TIME_EVENTS_HEADER 1056
 #define IDC_ACT_SESSIONS_HEADER         1057
-#define IDC_LIST1                       1058
 #define IDC_ACT_SESSIONS_LIST           1058
 #define IDC_LIST_STOP_REASON            1058
-#define IDC_COMBO1                      1059
 #define IDC_COMBO_SHUTDOWN              1059
 #define IDC_COMBO_PLAYLIST              1059
 #define IDC_COMBO_ORDER                 1059
@@ -59,10 +57,8 @@
 #define IDC_RADIO_PREV_PLAYLIST         1064
 #define IDC_RADIO_NEXT_PLAYLIST         1065
 #define IDC_RADIO_SELECT_PLAYLIST       1066
-#define IDC_EDIT1                       1067
 #define IDC_EDIT_DELAY                  1067
 #define IDC_EDIT_CMD_LINE               1067
-#define IDC_SPIN1                       1068
 #define IDC_SPIN_DELAY                  1068
 #define IDC_BUTTON_PICK                 1069
 #define IDC_STATIC_VOLUME               1070
@@ -71,24 +67,24 @@
 #define IDC_SPIN_DURATION               1073
 #define IDC_EDIT_DURATION               1074
 #define IDC_STATIC_DURATION             1075
-#define IDC_BUTTON1                     1076
 #define IDC_BTN_OPEN_FILE               1076
 #define IDC_BTN_STOP_ALL                1076
 #define IDC_STATIC_REASON               1077
 #define IDC_STATIC_FINAL_ACTION         1078
-#define IDC_LIST2                       1079
 #define IDC_EDIT_N_TRACKS               1080
-#define IDC_CHECK1                      1081
 #define IDC_ENABLED_CHECK               1081
 #define IDC_CHECK_RESTART_AFTER_COMPLETION 1081
+#define IDC_STATUS_EVENTS_HEADER        1084
+#define IDC_EVENTS_LIST_HEADER          1084
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        119
+#define _APS_NO_MFC                     1
+#define _APS_NEXT_RESOURCE_VALUE        129
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1082
-#define _APS_NEXT_SYMED_VALUE           101
+#define _APS_NEXT_CONTROL_VALUE         1085
+#define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif

@@ -38,6 +38,9 @@ private:
 	END_MSG_MAP()
 
 	BEGIN_DDX_MAP(PreferencesPage)
+		DDX_CONTROL(IDC_EVENTS_LIST_HEADER, m_staticStatusDateTimeEventsHeader)
+		DDX_CONTROL(IDC_STATIC_ACTION_LIST_HEADER, m_staticActiveSessionsHeader)
+		DDX_CONTROL(IDC_STATIC_STATUS_HEADER, m_staticStatusHeader)
 		DDX_CONTROL(IDC_ACTION_LIST_TREE, m_actionTree)
 	END_DDX_MAP()
 
@@ -49,11 +52,14 @@ private:
 	void OnBtnShowStatusWindow(UINT uNotifyCode, int nID, CWindow wndCtl);
 	void OnEnableScheduler(UINT uNotifyCode, int nID, CWindow wndCtl);
 
-private:
 	void OnChanged();
 
 private:
 	const preferences_page_callback::ptr m_callback;
+
+	HeaderStatic m_staticStatusDateTimeEventsHeader;
+	HeaderStatic m_staticActiveSessionsHeader;
+	HeaderStatic m_staticStatusHeader;
 
 	EventListWindow m_eventList;
 	ActionTreeWindow m_actionTree;

@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "version.h"
 #include "pref_page.h"
 #include "service_manager.h"
 

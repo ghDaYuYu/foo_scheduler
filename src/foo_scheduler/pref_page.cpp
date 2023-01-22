@@ -13,6 +13,8 @@ PreferencesPage::PreferencesPage(preferences_page_callback::ptr callback) :
 }
 
 PreferencesPage::~PreferencesPage() {
+	ServiceManager::Instance().SetEventListWindow(nullptr);
+
 	m_eventList.Detach();
 	m_actionTree.Detach();
 }
@@ -48,6 +50,7 @@ BOOL PreferencesPage::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 
 	m_eventList.CreateInDialog(*this, IDC_EVENT_LIST);
 	m_eventList.Init(m_pModel.get());
+	ServiceManager::Instance().SetEventListWindow(&m_eventList);
 
 	m_actionTree.Init(m_hWnd, IDC_ACTION_LIST_TREE, m_pModel.get());
 

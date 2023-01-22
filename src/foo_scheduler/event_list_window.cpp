@@ -117,7 +117,7 @@ void build_row_data(data_t& out, size_t pos, const Event* pEvent, ActionList* pA
 
 void EventListWindow::OnEventUpdated(Event* pEvent)
 {
-	size_t item = FindItemByEvent(pEvent);
+	size_t item = FindItemByEventID(pEvent);
 	_ASSERTE(item != -1);
 
 	auto & d = m_vdata.at(item);
@@ -132,6 +132,18 @@ void EventListWindow::ItemAction(size_t item)
 	EditEvent(reinterpret_cast<Event*>(m_vdata.at(item).p));
 }
 
+size_t EventListWindow::FindItemByEventID(const Event* pEvent)
+{
+
+	auto fit = std::find_if(m_vdata.begin(), m_vdata.end(), [pEvent](const data_t item) {
+		return reinterpret_cast<const Event*>(item.p)->GetEventGUID() == pEvent->GetEventGUID();
+		});
+
+	if (fit != m_vdata.end()) return std::distance(m_vdata.begin(), fit);
+
+	return -1;
+}
+
 size_t EventListWindow::FindItemByEvent(const Event* pEvent)
 {
 
@@ -144,9 +156,10 @@ size_t EventListWindow::FindItemByEvent(const Event* pEvent)
 	return -1;
 }
 
-void EventListWindow::ShowEventContextMenu(size_t item, const CPoint& point)
+void EventListWindow::ShowEventContextMenu(pfc::bit_array_bittable selmask, const CPoint& point)
 {
-	Event* pEvent = reinterpret_cast<Event*>(m_vdata.at(item).p/*GetItemData(item)*/);
+	auto first_sel = selmask.find(true, 0, GetItemCount());
+	Event* pEvent = first_sel < GetItemCount() ? reinterpret_cast<Event*>(m_vdata.at(first_sel).p) : nullptr;
 
 	CPoint pnt = point;
 	ClientToScreen(&pnt);

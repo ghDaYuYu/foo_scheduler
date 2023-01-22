@@ -71,10 +71,23 @@ void DateTimeEvent::OnSignal()
 	if (m_type != typeOnce)
 		return;
 
-	if (m_finalAction == finalActionRemove)
+	bool bupdate_preppage = false;
+	if (ServiceManager::Instance().GetEventListWindow() &&
+		::IsWindow(ServiceManager::Instance().GetEventListWindow()->m_hWnd)) {
+		bupdate_preppage = true;
+	}
+
+	if (m_finalAction == finalActionRemove) {
+		if (bupdate_preppage) {
+			ServiceManager::Instance().GetEventListWindow()->DeleteEvent(this);
+		}
 		ServiceManager::Instance().GetModel().RemoveEvent(this);
+	}
 	else
 	{
+		if (bupdate_preppage) {
+			ServiceManager::Instance().GetEventListWindow()->DisableEvent(this);
+		}
 		Enable(false);
 		ServiceManager::Instance().GetModel().UpdateEvent(this);
 	}

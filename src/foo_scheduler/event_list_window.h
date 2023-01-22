@@ -22,6 +22,29 @@ public:
 	~EventListWindow();
 
 	void Init(PrefPageModel* pModel);
+	bool DeleteEvent(const Event* pEvent)
+	{
+		size_t pos = FindItemByEventID(pEvent);
+		if (pos != ~0) {
+			m_vdata.erase(m_vdata.begin() + pos);
+			OnItemRemoved(pos);
+			UpdateItemsAll();
+			return true;
+		}
+		return false;
+	}
+
+	bool DisableEvent(const Event* pEvent)
+	{
+		size_t pos = FindItemByEventID(pEvent);
+		if (pos != ~0) {
+			m_vdata.at(pos).enabled = false;
+			ReloadItem(pos);
+			//UpdateItemsAll();
+			return true;
+		}
+		return false;
+	}
 
 	virtual groupID_t GetItemGroup(t_size p_item) const override {
 		(void)p_item; return -1;
@@ -162,6 +185,7 @@ private:
 	void InsertEventAtPos(size_t pos, const Event* pEvent);
 
 	size_t FindItemByEvent(const Event* pEvent);
+	size_t FindItemByEventID(const Event* pEvent);
 	//void MoveEventItem(const Event* pEvent, bool up);
 	void EditEvent(Event* pEvent);
 

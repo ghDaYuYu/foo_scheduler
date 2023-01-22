@@ -7,6 +7,7 @@
 #include "date_time_events_manager.h"
 #include "timers_manager.h"
 #include "prototypes_manager.h"
+#include "event_list_window.h"
 
 class ServiceManager : boost::noncopyable
 {
@@ -21,6 +22,8 @@ public:
 	TimersManager& GetTimersManager();
 	PrototypesManager<Event>& GetEventPrototypesManager();
 	PrototypesManager<IAction>& GetActionPrototypesManager();
+	EventListWindow* GetEventListWindow();
+	void SetEventListWindow(EventListWindow* elw);
 
 private:
 	ServiceManager();
@@ -34,6 +37,7 @@ private:
 	TimersManager m_timersManager;
 	PrototypesManager<Event> m_eventPrototypesManager;
 	PrototypesManager<IAction> m_actionPrototypesManager;
+	EventListWindow* m_eventListWindow = NULL;
 };
 
 

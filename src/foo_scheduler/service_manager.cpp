@@ -59,3 +59,13 @@ PrototypesManager<IAction>& ServiceManager::GetActionPrototypesManager()
 {
 	return m_actionPrototypesManager;
 }
+
+EventListWindow* ServiceManager::GetEventListWindow()
+{
+	return m_eventListWindow;
+}
+
+void ServiceManager::SetEventListWindow(EventListWindow* eventListWindow)
+{
+	m_eventListWindow = eventListWindow;
+}

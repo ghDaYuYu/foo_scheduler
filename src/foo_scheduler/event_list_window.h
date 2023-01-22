@@ -95,7 +95,13 @@ public:
 
 	void ExecuteDefaultAction(t_size index) override {
 		// double click, enter key, etc
-		if (index == footerRow()) onFooterClicked();
+		if (index == footerRow()) {
+			onFooterClicked();
+		}
+		else {
+			Event* pEvent = reinterpret_cast<Event*>(m_vdata.at(index).p);
+			EditEvent(pEvent);
+		}
 	}
 
 	// set text
@@ -165,10 +171,10 @@ public:
 
 	// Inplace edit handlers
 	// Overrides of CTableEditHelperV2 methods
-	void TableEdit_SetField(t_size item, t_size subItem, const char* value) override;
-	void TableEdit_GetField(t_size item, t_size subItem, pfc::string_base& out, t_size& lineCount) override;
+	void TableEdit_SetField(t_size item, t_size subItem, const char* value) override {};
+	void TableEdit_GetField(t_size item, t_size subItem, pfc::string_base& out, t_size& lineCount) override {};
 	bool TableEdit_IsColumnEditable(t_size subItem) const override {
-		return subItem == 0 || subItem == 1;
+		return false;
 	}
 
 private:
@@ -190,10 +196,10 @@ private:
 	//void MoveEventItem(const Event* pEvent, bool up);
 	void EditEvent(Event* pEvent);
 
-	void ShowEventContextMenu(size_t item, const CPoint& point);
+	void ShowEventContextMenu(pfc::bit_array_bittable selmask, const CPoint& point);
 
 	void AppendActionListsItems(CMenu& menuPopup, bool replace, Event* pEvent);
-	void AppendEventItems(CMenu& menuPopup, const Event* pEvent);
+	void AppendEventItems(CMenu& menuPopup, const bool single_sel);
 
 private:
 
@@ -201,6 +207,7 @@ private:
 
 	BEGIN_MSG_MAP(EventListWindow)
 		MSG_WM_CREATE(OnCreate)
+		MSG_WM_DESTROY(OnDestroy)
 		MSG_WM_CONTEXTMENU(OnContextMenu)
 		CHAIN_MSG_MAP(TParent)
 	END_MSG_MAP()

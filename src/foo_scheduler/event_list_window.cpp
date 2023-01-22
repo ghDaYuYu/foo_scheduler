@@ -175,9 +175,10 @@ void EventListWindow::ShowEventContextMenu(pfc::bit_array_bittable selmask, cons
 
 	CMenu menuPopup;
 	menuPopup.CreatePopupMenu();
-
-	AppendActionListsItems(menuPopup, false, pEvent);
-	AppendEventItems(menuPopup, pEvent);
+	if (pEvent) {
+		AppendActionListsItems(menuPopup, false, pEvent);
+	}
+	AppendEventItems(menuPopup, GetSelectedCount() == 1);
 
 	UINT uCmdID = menuPopup.TrackPopupMenu(TPM_LEFTALIGN | TPM_NONOTIFY | TPM_RETURNCMD, pnt.x, pnt.y, GetActiveWindow());
 
@@ -193,7 +194,8 @@ void EventListWindow::ShowEventContextMenu(pfc::bit_array_bittable selmask, cons
     case menuItemDuplicate:
 		{
 			EventDuplicateVisitor visitor(m_pModel->GetEvents());
-			pEvent->ApplyVisitor(visitor);           
+			pEvent->ApplyVisitor(visitor);
+			pEvent->NewEventGUID();
 			m_pModel->AddEvent(visitor.TakeEvent());
 		}
 		break;
@@ -207,9 +209,14 @@ void EventListWindow::ShowEventContextMenu(pfc::bit_array_bittable selmask, cons
 			std::size_t actionListIndex = uCmdID - 1;
 			std::vector<ActionList*> actionLists = m_pModel->GetActionLists();
 
-			pEvent->SetActionListGUID(actionListIndex != actionLists.size() ?
-				actionLists[actionListIndex]->GetGUID() : pfc::guid_null);
-			m_pModel->UpdateEvent(pEvent);		
+			size_t w = selmask.find_first(true, 0, GetItemCount());
+			while (w < GetItemCount()) {
+				Event* pEvent = first_sel < GetItemCount() ? reinterpret_cast<Event*>(m_vdata.at(w).p) : nullptr;
+				pEvent->SetActionListGUID(actionListIndex != actionLists.size() ?
+					actionLists[actionListIndex]->GetGUID() : pfc::guid_null);
+				m_pModel->UpdateEvent(pEvent);
+				w = selmask.find_next(true, w, GetItemCount());
+			};
 		}
 		break;
 	}
@@ -242,20 +249,22 @@ void EventListWindow::AppendActionListsItems(CMenu& menuPopup, bool replace, Eve
 		static_cast<UINT_PTR>(actionLists.size() + 1), L"None");
 
 	// Check item.
-	if (pEvent->GetActionListGUID() == pfc::guid_null)
-	{
-		menuActionLists->CheckMenuRadioItem((UINT)1, (UINT)actionLists.size() + 1,
-			(UINT)actionLists.size() + 1, MF_BYCOMMAND);
-	}
-	else
-	{
-		for (std::size_t i = 0; i < actionLists.size(); ++i)
-			if (pEvent->GetActionListGUID() == actionLists[i]->GetGUID())
-			{
-				menuActionLists->CheckMenuRadioItem((UINT)1, (UINT)actionLists.size(),
-					(UINT)i + 1, MF_BYCOMMAND);
-				break;
-			}
+	if (GetSelectedCount() == 1) {
+		if (pEvent->GetActionListGUID() == pfc::guid_null)
+		{
+			menuActionLists->CheckMenuRadioItem((UINT)1, (UINT)actionLists.size() + 1,
+				(UINT)actionLists.size() + 1, MF_BYCOMMAND);
+		}
+		else
+		{
+			for (std::size_t i = 0; i < actionLists.size(); ++i)
+				if (pEvent->GetActionListGUID() == actionLists[i]->GetGUID())
+				{
+					menuActionLists->CheckMenuRadioItem((UINT)1, (UINT)actionLists.size(),
+						(UINT)i + 1, MF_BYCOMMAND);
+					break;
+				}
+		}
 	}
 	if (!replace) {
 		menuPopup.AppendMenu(MF_POPUP, menuActionLists->Detach(), L"Assign action list");
@@ -263,14 +272,14 @@ void EventListWindow::AppendActionListsItems(CMenu& menuPopup, bool replace, Eve
 	}
 }
 
-void EventListWindow::AppendEventItems(CMenu& menuPopup, const Event* pEvent)
+void EventListWindow::AppendEventItems(CMenu& menuPopup, const bool single_sel)
 {
 	menuPopup.AppendMenu(MF_SEPARATOR);
 
-	menuPopup.AppendMenu(MF_STRING | MF_BYCOMMAND,
+	menuPopup.AppendMenu(MF_STRING | !single_sel ? MF_DISABLED | MF_GRAYED : 0 | MF_BYCOMMAND,
 		static_cast<UINT_PTR>(menuItemEdit), L"Edit...");
 
-    menuPopup.AppendMenu(MF_STRING | MF_BYCOMMAND,
+    menuPopup.AppendMenu(MF_STRING | !single_sel ? MF_DISABLED | MF_GRAYED : 0 | MF_BYCOMMAND,
         static_cast<UINT_PTR>(menuItemDuplicate), L"Duplicate");
 
 	menuPopup.AppendMenu(MF_STRING | MF_BYCOMMAND,
@@ -308,21 +317,21 @@ void EventListWindow::OnModelReset()
 
 void EventListWindow::OnContextMenu(CWindow wnd, CPoint point)
 {
-	size_t selected = GetSingleSel();
-
-	if (selected == -1)
+	if (GetSelectedCount() == 0)
 		return;
+
+	pfc::bit_array_bittable selmask = GetSelectionMask();
 
 	if (point.x < 0 && point.y < 0)
 	{
-		CRect itemRect = GetItemRect(selected);
+		CRect itemRect = GetItemRect(GetFirstSelected());
 		point.x = itemRect.left;
 		point.y = itemRect.bottom;
 	}
 	else
 		ScreenToClient(&point);
 
-	ShowEventContextMenu(selected, point);
+	ShowEventContextMenu(selmask, point);
 }
 
 void EventListWindow::InitColumns()
@@ -462,18 +471,17 @@ void EventListWindow::TableEdit_GetField(t_size item, t_size subItem, pfc::strin
 // remove mask
 
 void EventListWindow::RemoveMask(pfc::bit_array const& mask) {
-	if (mask.get(footerRow())) return; // footer row cannot be removed
-	auto oldCount = GetItemCount();
 	
-	auto t = mask.find_first(true, 0, GetItemCount());
-	while (t != pfc::infinite_size) {
-		Event* pEvent = reinterpret_cast<Event*>(m_vdata.at(t).p);
+	if (mask.get(footerRow())) return;
+
+	auto oldCount = GetItemCount();
+	auto w = mask.find_first(true, 0, GetItemCount());
+	
+	while (w < oldCount) {
+		Event* pEvent = reinterpret_cast<Event*>(m_vdata.at(t - (oldCount - m_vdata.size())).p);
 		m_pModel->RemoveEvent(pEvent);
-		t = mask.find_first(true, 0, pfc::infinite_size);
+		t = mask.find_next(true, w, oldCount);
 	}
-
-	pfc::remove_mask_t(m_vdata, mask);
-
 	this->OnItemsRemoved(mask, oldCount);
 }
 

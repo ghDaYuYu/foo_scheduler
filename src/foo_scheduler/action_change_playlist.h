@@ -30,7 +30,8 @@ public:
 	{
 		ctSelectPlaylist = 0,
 		ctNextPlaylist,
-		ctPrevPlaylist
+		ctPrevPlaylist,
+		ctActivePlaylist,
 	};
 
 	EChangeType GetChangeType() const;
@@ -79,6 +80,7 @@ private:
 		COMMAND_ID_HANDLER_EX(IDC_RADIO_SELECT_PLAYLIST, OnChangeTypeSelected)
 		COMMAND_ID_HANDLER_EX(IDC_RADIO_NEXT_PLAYLIST, OnChangeTypeSelected)
 		COMMAND_ID_HANDLER_EX(IDC_RADIO_PREV_PLAYLIST, OnChangeTypeSelected)
+		COMMAND_ID_HANDLER_EX(IDC_RADIO_ACTIVE_PLAYLIST, OnChangeTypeSelected)
 
 		COMMAND_ID_HANDLER_EX(IDOK,     OnCloseCmd)
 		COMMAND_ID_HANDLER_EX(IDCANCEL, OnCloseCmd)

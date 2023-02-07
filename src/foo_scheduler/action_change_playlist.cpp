@@ -44,6 +44,9 @@ std::wstring ActionChangePlaylist::GetDescription() const
 
 	case ctPrevPlaylist:
 		return L"Previous playlist";
+
+	case ctActivePlaylist:
+		return L"Active playlist";
 	}
 
 	_ASSERTE(false);
@@ -150,6 +153,7 @@ void ActionChangePlaylist::ExecSession::Run(const AsyncCall::CallbackPtr& comple
 
 	case ActionChangePlaylist::ctNextPlaylist:
 	case ActionChangePlaylist::ctPrevPlaylist:
+	case ActionChangePlaylist::ctActivePlaylist:
 		{
 			t_size plCount = pm->get_playlist_count();
 
@@ -161,7 +165,10 @@ void ActionChangePlaylist::ExecSession::Run(const AsyncCall::CallbackPtr& comple
 			if (playlistIndex == pfc::infinite_size)
 				playlistIndex = pm->get_playing_playlist();
 
-			if (m_action.GetChangeType() == ActionChangePlaylist::ctNextPlaylist)
+			if (m_action.GetChangeType() == ActionChangePlaylist::ctActivePlaylist) {
+				break;
+			}
+			else if (m_action.GetChangeType() == ActionChangePlaylist::ctNextPlaylist)
 			{
 				if (playlistIndex == plCount - 1)
 					playlistIndex = 0;

@@ -53,6 +53,7 @@
 #define IDC_COMBO_PLAYLIST              1059
 #define IDC_COMBO_ORDER                 1059
 #define IDC_COMBO_DELAY_UNITS           1059
+#define IDC_RADIO_ACTIVE_PLAYLIST       1063
 #define IDC_RADIO_PREV_PLAYLIST         1064
 #define IDC_RADIO_NEXT_PLAYLIST         1065
 #define IDC_RADIO_SELECT_PLAYLIST       1066

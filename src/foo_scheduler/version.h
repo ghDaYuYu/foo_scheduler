@@ -4,7 +4,7 @@
 
 #define COMPONENT_VERSION_MAJOR 4
 #define COMPONENT_VERSION_MINOR 19
-#define COMPONENT_VERSION_PATCH 1
+#define COMPONENT_VERSION_PATCH 2
 #define COMPONENT_VERSION_SUB_PATCH 0
 
 #define MAKE_STRING(text) #text
@@ -41,7 +41,10 @@
 "\n" \
 "Changelog:\n" \
   "\n" \
-  "= 4.19.1 mod by Dayuyu\n" \
+  "= 4.19.2\n" \
+  "* Added new option 'Active playlist' to 'Change playlist' action.\n" \
+  "\n" \
+  "= 4.19.1\n" \
   "* Component renamed 'Scheduler Mod'.\n" \
   "* New 32/64bit installer.\n" \
   "* Event list drag & drop.\n" \

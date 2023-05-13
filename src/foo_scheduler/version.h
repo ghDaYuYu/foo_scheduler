@@ -10,6 +10,7 @@
 #define MAKE_STRING(text) #text
 #define MAKE_COMPONENT_VERSION(major,minor,patch) MAKE_STRING(major) "." MAKE_STRING(minor) "." MAKE_STRING(patch)
 #define MAKE_DLL_VERSION(major,minor,patch,subpatch) MAKE_STRING(major) "." MAKE_STRING(minor) "." MAKE_STRING(patch) "." MAKE_STRING(subpatch)
+#define MAKE_API_SDK_VERSION(sdk_ver, sdk_target) MAKE_STRING(sdk_ver) " " MAKE_STRING(sdk_target)
 
 //"0.1.2"
 #define FOO_SCHEDULER_VERSION MAKE_COMPONENT_VERSION(COMPONENT_VERSION_MAJOR,COMPONENT_VERSION_MINOR,COMPONENT_VERSION_PATCH)
@@ -17,6 +18,8 @@
 //0.1.2.3 & "0.1.2.3"
 #define DLL_VERSION_NUMERIC COMPONENT_VERSION_MAJOR, COMPONENT_VERSION_MINOR, COMPONENT_VERSION_PATCH, COMPONENT_VERSION_SUB_PATCH
 #define DLL_VERSION_STRING MAKE_DLL_VERSION(COMPONENT_VERSION_MAJOR,COMPONENT_VERSION_MINOR,COMPONENT_VERSION_PATCH,COMPONENT_VERSION_SUB_PATCH)
+//fb2k ver
+#define PLUGIN_FB2K_SDK MAKE_API_SDK_VERSION(FOOBAR2000_SDK_VERSION, FOOBAR2000_TARGET_VERSION)
 
 #define COMPONENT_NAME "foo_scheduler_mod"
 #define COMPONENT_YEAR "2023"
@@ -29,17 +32,24 @@
 #define PLUGIN_CFG_GLOBAL_VERSION 0x0040
 
 #define PLUGIN_ABOUT \
-	"Build date: " __DATE__ "\n\n" \
+PLUGIN_NAME"\n\n" \
 "Component modded by DaYuyu.\n" \
+"Version: "FOO_SCHEDULER_VERSION"\n" \
+"Compiled: "__DATE__ "\n" \
+"fb2k SDK: "PLUGIN_FB2K_SDK"\n" \
 "Original Component by Andrew Smolko.\n" \
 "\n" \
-	"Copyright (C) 2006-2023 Andrew Smolko.\n" \
-	"All rights reserved.\n" \
-    "\n" \
+"Copyright (C) 2006-2023 Andrew Smolko.\n" \
+"All rights reserved.\n" \
+"\n" \
 "Acknowledgements:\n" \
 "Thanks to Andrew Smolko for developing the foo_scheduler project (up to version 4.19).\n" \
 "\n" \
 "Changelog:\n" \
+  "\n" \
+  "= 4.19.3\n" \
+  "* DPI safe Status window placement.\n" \
+  "* Added fb2k SDK and target version info to About component.\n" \
   "\n" \
   "= 4.19.2\n" \
   "* Added new option 'Active playlist' to 'Change playlist' action.\n" \

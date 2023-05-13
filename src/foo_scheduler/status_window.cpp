@@ -1,12 +1,14 @@
 #include "pch.h"
+#include "helpers/WindowPositionUtils.h"
 #include "status_window.h"
 #include "service_manager.h"
 #include "date_time_events_manager.h"
 #include "action_list_exec_session.h"
 #include "date_time_event.h"
-//mod guid
-static const GUID guid_cfg_window_placement_status_dlg = { 0xc81e877b, 0xf8aa, 0x4a8d, { 0x92, 0xb3, 0x98, 0xa, 0x8c, 0x17, 0x91, 0xc3 } };
-static cfg_window_placement cfg_window_placement_status_dlg(guid_cfg_window_placement_status_dlg);
+
+// {3F43374C-066A-4AC9-B5A5-EE71B23A7381}
+static const GUID guid_cfg_dialog_position_status_dlg = { 0x3f43374c, 0x66a, 0x4ac9, { 0xb5, 0xa5, 0xee, 0x71, 0xb2, 0x3a, 0x73, 0x81 } };
+static cfgDialogPosition cfg_dialog_position_status_dlg(guid_cfg_dialog_position_status_dlg);
 
 StatusWindow::StatusWindow(HWND parent, const boost::function<void ()>& onDestroyCallback) :
 	m_onDestroyCallback(onDestroyCallback)
@@ -42,7 +44,7 @@ BOOL StatusWindow::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 
 	DoDataExchange(DDX_LOAD);
 	DlgResize_Init(true);
-	cfg_window_placement_status_dlg.on_window_creation(m_hWnd, true);
+	cfg_dialog_position_status_dlg.AddWindow(m_hWnd);
 
 	//dark mode
 	AddDialog(m_hWnd);
@@ -75,7 +77,7 @@ void StatusWindow::OnFinalMessage(HWND /*hWnd*/)
 
 void StatusWindow::OnClose()
 {
-	cfg_window_placement_status_dlg.on_window_destruction(m_hWnd);
+	cfg_dialog_position_status_dlg.RemoveWindow(m_hWnd);
 	DestroyWindow();
 }
 

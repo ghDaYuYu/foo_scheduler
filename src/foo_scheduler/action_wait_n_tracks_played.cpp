@@ -42,7 +42,12 @@ IAction* ActionWaitNTracksPlayed::Clone() const
 
 std::wstring ActionWaitNTracksPlayed::GetDescription() const
 {
-	return boost::str(boost::wformat(L"Wait until %1% tracks played") % m_numTracks);
+	if (m_numTracks == MAXINT) {
+		return boost::str(boost::wformat(L"Wait until End Of Files"));
+	}
+	else {
+		return boost::str(boost::wformat(L"Wait until %1% tracks played") % m_numTracks);
+	}
 }
 
 bool ActionWaitNTracksPlayed::HasConfigDialog() const
@@ -118,7 +123,12 @@ void ActionWaitNTracksPlayed::ExecSession::Init(IActionListExecSessionFuncs& ale
 
 bool ActionWaitNTracksPlayed::ExecSession::GetCurrentStateDescription(std::wstring& descr) const
 {
-	descr = boost::str(boost::wformat(L"%1% tracks left") % m_tracksLeft);
+	if (m_tracksLeft == MAXINT) {
+		descr = boost::str(boost::wformat(L"..."));
+	}
+	else {
+		descr = boost::str(boost::wformat(L"%1% tracks left") % m_tracksLeft);
+	}
 	return true;
 }
 
@@ -130,7 +140,9 @@ void ActionWaitNTracksPlayed::ExecSession::on_playback_new_track(metadb_handle_p
 		return;
 	}
 
-	--m_tracksLeft;
+	if (m_tracksLeft != MAXINT) {
+		--m_tracksLeft;
+	}
 
 	if (m_tracksLeft == 0)
 	{
@@ -173,7 +185,32 @@ void ActionWaitNTracksPlayed::ExecSession::on_playback_starting(play_control::t_
 
 void ActionWaitNTracksPlayed::ExecSession::on_playback_stop(playback_control::t_stop_reason p_reason)
 {
-	m_ignoreNextTrackEvent = true;
+
+	if (playback_control::stop_reason_eof) {
+
+		if (m_tracksLeft == MAXINT) {
+			m_tracksLeft = 0;
+		}
+		else {
+			--m_tracksLeft;
+		}
+
+		if (m_tracksLeft == 0)
+		{
+			//todo: rep on_playback_new_track
+			// Do not unregister from player events in on_playback_, so need async call.
+			AsyncCall::CallbackPtr completionCall = AsyncCall::MakeCallback<ExecSession>(
+				shared_from_this(), boost::mem_fn(&ExecSession::OnSessionCompleted));
+
+			AsyncCall::AsyncRunInMainThread(completionCall);
+		}
+
+		m_alesFuncs->UpdateDescription();
+	}
+	else {
+		m_ignoreNextTrackEvent = true;
+	}
+
 }
 
 //------------------------------------------------------------------------------
@@ -185,9 +222,33 @@ ActionWaitNTracksEditor::ActionWaitNTracksEditor(ActionWaitNTracksPlayed& action
 
 }
 
+void ActionWaitNTracksEditor::enable_controls(bool eof) {
+	::EnableWindow(uGetDlgItem(IDC_EDIT_N_TRACKS), !eof);
+	if (eof) {
+		SetDlgItemText(IDC_EDIT_N_TRACKS, L"");
+	}
+	else {
+		bool bmax = m_action.GetNumTracks() == MAXINT;
+		SetDlgItemInt(IDC_EDIT_N_TRACKS, bmax ? 1 : m_action.GetNumTracks());
+	}
+	m_bk_numtracks = uGetDlgItemInt(IDC_EDIT_N_TRACKS);
+}
+
 BOOL ActionWaitNTracksEditor::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 {
-	SetDlgItemInt(IDC_EDIT_N_TRACKS, m_action.GetNumTracks());
+	m_checkEOF = GetDlgItem(IDC_CHECK_NTRACKS_EOF);
+	bool beof = m_action.GetNumTracks() == MAXINT;
+
+	if (!beof) {
+		m_bk_numtracks = m_action.GetNumTracks();
+	}
+	else {
+		SetDlgItemInt(IDC_EDIT_N_TRACKS, m_action.GetNumTracks());
+	}
+	m_checkEOF.SetCheck(beof);
+
+	enable_controls(beof);
+
 	CenterWindow(GetParent());
 
 	// dark mode
@@ -201,7 +262,13 @@ void ActionWaitNTracksEditor::OnCloseCmd(UINT uNotifyCode, int nID, CWindow wndC
 {
 	if (nID == IDOK)
 	{
-		int numTracks = GetDlgItemInt(IDC_EDIT_N_TRACKS, 0, 0);
+		int numTracks;
+		if (m_checkEOF.GetCheck()) {
+			numTracks = MAXINT;
+		}
+		else {
+			numTracks = uGetDlgItemInt(IDC_EDIT_N_TRACKS);
+		}
 
 		if (numTracks < 1)
 		{
@@ -213,4 +280,11 @@ void ActionWaitNTracksEditor::OnCloseCmd(UINT uNotifyCode, int nID, CWindow wndC
 	}
 
 	EndDialog(nID);
+}
+
+void ActionWaitNTracksEditor::OnCheckEOF(UINT uNotifyCode, int nID, CWindow wndCtl)
+{
+
+	enable_controls(m_checkEOF.GetCheck());
+
 }

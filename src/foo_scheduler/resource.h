@@ -76,6 +76,7 @@
 #define IDC_CHECK_RESTART_AFTER_COMPLETION 1081
 #define IDC_STATUS_EVENTS_HEADER        1084
 #define IDC_EVENTS_LIST_HEADER          1084
+#define IDC_CHECK_NTRACKS_EOF           1085
 
 // Next default values for new objects
 // 
@@ -84,7 +85,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        129
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1085
+#define _APS_NEXT_CONTROL_VALUE         1086
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif

@@ -47,6 +47,7 @@ public:
 		const ActionWaitNTracksPlayed& m_action;
 		AsyncCall::CallbackPtr m_completionCall;
         IActionListExecSessionFuncs* m_alesFuncs = nullptr;
+
 		int m_tracksLeft;
 		bool m_subscribedToPlayerEvents;
 		bool m_ignoreNextTrackEvent;
@@ -89,19 +90,25 @@ public:
 	explicit ActionWaitNTracksEditor(ActionWaitNTracksPlayed& action);
 
 private:
-	ActionWaitNTracksPlayed& m_action;
-
-private:
 	BEGIN_MSG_MAP_EX(ActionWaitNTracksEditor)
 		MSG_WM_INITDIALOG(OnInitDialog)
-
+		COMMAND_ID_HANDLER_EX(IDC_CHECK_NTRACKS_EOF, OnCheckEOF)
 		COMMAND_ID_HANDLER_EX(IDOK,     OnCloseCmd)
 		COMMAND_ID_HANDLER_EX(IDCANCEL, OnCloseCmd)
 	END_MSG_MAP()
 
 	BOOL OnInitDialog(CWindow wndFocus, LPARAM lInitParam);
+	void OnCheckEOF(UINT uNotifyCode, int nID, CWindow wndCtl);
 	void OnCloseCmd(UINT uNotifyCode, int nID, CWindow wndCtl);
 
+	void enable_controls(bool eof);
+
+private:
+
 	PopupTooltipMessage m_popupTooltipMsg;
+	int m_bk_numtracks = 1;
+	CButton m_checkEOF;
+
+	ActionWaitNTracksPlayed& m_action;
 };
 

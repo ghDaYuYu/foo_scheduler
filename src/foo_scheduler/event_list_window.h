@@ -199,7 +199,7 @@ private:
 	void ShowEventContextMenu(pfc::bit_array_bittable selmask, const CPoint& point);
 
 	void AppendActionListsItems(CMenu& menuPopup, bool replace, Event* pEvent);
-	void AppendEventItems(CMenu& menuPopup, const bool single_sel);
+	void AppendEventItems(CMenu& menuPopup, const bool single_sel, bool runnable);
 
 private:
 
@@ -228,8 +228,9 @@ private:
 	enum EPopupMenuItems
 	{
 		menuItemEdit = 1000,
-        menuItemDuplicate,
+		menuItemDuplicate,
 		menuItemRemove,
+		menuItemRun,
 		menuItemMoveUp,
 		menuItemMoveDown
 	};

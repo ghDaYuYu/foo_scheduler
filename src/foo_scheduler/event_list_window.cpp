@@ -170,6 +170,8 @@ void EventListWindow::ShowEventContextMenu(pfc::bit_array_bittable selmask, cons
 	auto first_sel = selmask.find(true, 0, GetItemCount());
 	Event* pEvent = first_sel < GetItemCount() ? reinterpret_cast<Event*>(m_vdata.at(first_sel).p) : nullptr;
 
+	bool bRunnableEvent = pEvent && GetSingleSel() != ~0 && pEvent->GetName()._Equal(L"menu item event");
+
 	CPoint pnt = point;
 	ClientToScreen(&pnt);
 
@@ -178,7 +180,7 @@ void EventListWindow::ShowEventContextMenu(pfc::bit_array_bittable selmask, cons
 	if (pEvent) {
 		AppendActionListsItems(menuPopup, false, pEvent);
 	}
-	AppendEventItems(menuPopup, GetSelectedCount() == 1);
+	AppendEventItems(menuPopup, GetSelectedCount() == 1, bRunnableEvent);
 
 	UINT uCmdID = menuPopup.TrackPopupMenu(TPM_LEFTALIGN | TPM_NONOTIFY | TPM_RETURNCMD, pnt.x, pnt.y, GetActiveWindow());
 
@@ -202,6 +204,10 @@ void EventListWindow::ShowEventContextMenu(pfc::bit_array_bittable selmask, cons
 
 	case menuItemRemove:
 		RemoveMask(GetSelectionMask());
+		break;
+	
+	case menuItemRun:
+		ServiceManager::Instance().GetRootController().ProcessEvent(pEvent);
 		break;
 
 	default: // Action list selected.
@@ -284,6 +290,12 @@ void EventListWindow::AppendEventItems(CMenu& menuPopup, const bool single_sel)
 
 	menuPopup.AppendMenu(MF_STRING | MF_BYCOMMAND,
 		static_cast<UINT_PTR>(menuItemRemove), L"Remove");
+
+	if (runnable) {
+		menuPopup.AppendMenu(MF_SEPARATOR);
+		menuPopup.AppendMenu(MF_STRING | MF_BYCOMMAND,
+			static_cast<UINT_PTR>(menuItemRun), L"Run");
+	}
 
 }
 

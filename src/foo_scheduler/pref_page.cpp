@@ -55,8 +55,8 @@ BOOL PreferencesPage::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 	m_actionTree.Init(m_hWnd, IDC_ACTION_LIST_TREE, m_pModel.get());
 
 	//dark mode
-	AddDialog(m_hWnd);
-	AddControls(m_hWnd);
+	m_dark.AddDialog(m_hWnd);
+	m_dark.AddControls(m_hWnd);
 
 	CheckDlgButton(IDC_ENABLED_CHECK, m_pModel->IsSchedulerEnabled());
 

@@ -9,8 +9,7 @@
 class PreferencesPage :
 	public CDialogImpl<PreferencesPage>,
 	public CWinDataExchange<PreferencesPage>,
-	public preferences_page_instance,
-	public fb2k::CDarkModeHooks
+	public preferences_page_instance
 {
 public:
 	// Constructor - invoked by preferences_page_impl helpers - don't do Create() in here,
@@ -56,6 +55,8 @@ private:
 
 private:
 	const preferences_page_callback::ptr m_callback;
+
+	fb2k::CDarkModeHooks m_dark;
 
 	HeaderStatic m_staticStatusDateTimeEventsHeader;
 	HeaderStatic m_staticActiveSessionsHeader;

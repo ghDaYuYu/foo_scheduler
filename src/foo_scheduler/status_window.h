@@ -28,8 +28,7 @@ class StatusWindow :
 	public CWinDataExchange<StatusWindow>,
 	public CDialogResize<StatusWindow>,
 	public message_filter,
-	public boost::signals2::trackable,
-	public fb2k::CDarkModeHooks
+	public boost::signals2::trackable
 {
 public:
 	enum { IDD = IDD_STATUS_WINDOW };
@@ -85,8 +84,6 @@ private:
 	void OnCloseButton(UINT uNotifyCode, int nID, CWindow wndCtl);
 	void OnStopAllActionLists(UINT uNotifyCode, int nID, CWindow wndCtl);
 
-	void OnDestroy();
-
 	LRESULT OnActSessionsListGetDispInfo(LPNMHDR pnmh);
 	LRESULT OnActSessionsDblClick(LPNMHDR pnmh);
 
@@ -97,6 +94,8 @@ private:
 
 private:
 	boost::function<void ()> m_onDestroyCallback;
+
+	fb2k::CDarkModeHooks m_dark;
 
 	HeaderStatic m_staticStatusDateTimeEventsHeader;
 	HeaderStatic m_staticActiveSessionsHeader;

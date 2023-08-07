@@ -35,7 +35,7 @@ StatusWindow::StatusWindow(HWND parent, const boost::function<void ()>& onDestro
 StatusWindow::~StatusWindow()
 {
 	static_api_ptr_t<message_loop> pMsgLoop;
-	pMsgLoop->remove_message_filter(this);	
+	pMsgLoop->remove_message_filter(this);
 }
 
 BOOL StatusWindow::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
@@ -43,12 +43,12 @@ BOOL StatusWindow::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 	m_activeSessionsModel =	ServiceManager::Instance().GetRootController().GetActionListExecSessions();
 
 	DoDataExchange(DDX_LOAD);
-	DlgResize_Init(true);
 	cfg_dialog_position_status_dlg.AddWindow(m_hWnd);
+	DlgResize_Init(true);
 
 	//dark mode
-	AddDialog(m_hWnd);
-	AddControls(m_hWnd);
+	m_dark.AddDialog(m_hWnd);
+	m_dark.AddControls(m_hWnd);
 
 	DWORD dwStyle = LVS_EX_LABELTIP | LVS_EX_DOUBLEBUFFER;
 
@@ -66,6 +66,7 @@ BOOL StatusWindow::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 	UpdateActiveSessions();
 
 	SetMsgHandled(false);
+
 	return TRUE;
 }
 
@@ -107,7 +108,11 @@ bool StatusWindow::pretranslate_message(MSG* p_msg)
 void StatusWindow::UpdatePendingEvents()
 {
 	m_pendingEventsModel = ServiceManager::Instance().GetDateTimeEventsManager().GetPendingEvents();
-	m_dateTimeEvents.SetItemCountEx(m_pendingEventsModel.size(), LVSICF_NOSCROLL);
+	bool bfix_refresh = m_dateTimeEvents.GetItemCount() && m_dateTimeEvents.GetItemCount() == m_pendingEventsModel.size();
+	m_dateTimeEvents.SetItemCountEx(static_cast<int>(m_pendingEventsModel.size()), LVSICF_NOSCROLL);
+	if (bfix_refresh) {
+		m_dateTimeEvents.RedrawItems((int)m_pendingEventsModel.size() - 1, (int)m_pendingEventsModel.size() - 1);
+	}
 }
 
 void StatusWindow::OnActionListExecSessionAdded(ActionListExecSession* pSession)
@@ -136,12 +141,16 @@ LRESULT StatusWindow::OnActSessionsListGetDispInfo(LPNMHDR pnmh)
 		swprintf_s(pInfo->item.pszText, pInfo->item.cchTextMax, L"%s", m_activeSessionsModel[pInfo->item.iItem]->GetDescription().c_str());
 	}
 
-	return 0;
+	return TRUE;
 }
 
 void StatusWindow::UpdateActiveSessions()
 {
-	m_activeSessions.SetItemCountEx(m_activeSessionsModel.size(), LVSICF_NOSCROLL);
+	bool bfix_refresh = m_activeSessions.GetItemCount() && m_activeSessions.GetItemCount() == m_activeSessionsModel.size();
+	m_activeSessions.SetItemCountEx(static_cast<int>(m_activeSessionsModel.size()), LVSICF_NOSCROLL);
+	if (bfix_refresh) {
+		m_activeSessions.RedrawItems((int)m_activeSessionsModel.size() - 1, (int)m_activeSessionsModel.size() - 1);
+	}
 }
 
 LRESULT StatusWindow::OnActSessionsDblClick(LPNMHDR pnmh)
@@ -166,7 +175,7 @@ LRESULT StatusWindow::OnPendingEventsGetDispInfo(LPNMHDR pnmh)
 		swprintf_s(pInfo->item.pszText, pInfo->item.cchTextMax, L"%s", m_pendingEventsModel[pInfo->item.iItem]->GetDescription().c_str());
 	}
 
-	return 0;
+	return TRUE;
 }
 
 void StatusWindow::OnStopAllActionLists(UINT uNotifyCode, int nID, CWindow wndCtl)

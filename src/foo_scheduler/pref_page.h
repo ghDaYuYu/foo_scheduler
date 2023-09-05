@@ -8,6 +8,7 @@
 
 class PreferencesPage :
 	public CDialogImpl<PreferencesPage>,
+	public CDialogResize<PreferencesPage>,
 	public CWinDataExchange<PreferencesPage>,
 	public preferences_page_instance
 {
@@ -34,18 +35,21 @@ private:
 		COMMAND_ID_HANDLER_EX(IDC_BTN_SHOW_STATUS_WINDOW, OnBtnShowStatusWindow)
 		COMMAND_ID_HANDLER_EX(IDC_ENABLED_CHECK, OnEnableScheduler)
 		CHAIN_MSG_MAP_MEMBER(m_actionTree)
+		CHAIN_MSG_MAP(CDialogResize<PreferencesPage>)
+		REFLECT_NOTIFICATIONS()
 	END_MSG_MAP()
 
 	BEGIN_DDX_MAP(PreferencesPage)
-		DDX_CONTROL(IDC_EVENTS_LIST_HEADER, m_staticStatusDateTimeEventsHeader)
-		DDX_CONTROL(IDC_STATIC_ACTION_LIST_HEADER, m_staticActiveSessionsHeader)
-		DDX_CONTROL(IDC_STATIC_STATUS_HEADER, m_staticStatusHeader)
 		DDX_CONTROL(IDC_ACTION_LIST_TREE, m_actionTree)
 	END_DDX_MAP()
 
+	void DlgResize_UpdateLayout(int cxWidth, int cyHeight) {
+		CDialogResize<PreferencesPage>::DlgResize_UpdateLayout(cxWidth, cyHeight);
+	}
+
 private:
 	BOOL OnInitDialog(CWindow wndFocus, LPARAM lInitParam);
-
+	void SetThemeFont();
 	void OnBtnAddEvent(UINT uNotifyCode, int nID, CWindow wndCtl);
 	void OnBtnAddActionList(UINT uNotifyCode, int nID, CWindow wndCtl);
 	void OnBtnShowStatusWindow(UINT uNotifyCode, int nID, CWindow wndCtl);
@@ -57,6 +61,7 @@ private:
 	const preferences_page_callback::ptr m_callback;
 
 	fb2k::CDarkModeHooks m_dark;
+	HFONT m_font;
 
 	HeaderStatic m_staticStatusDateTimeEventsHeader;
 	HeaderStatic m_staticActiveSessionsHeader;

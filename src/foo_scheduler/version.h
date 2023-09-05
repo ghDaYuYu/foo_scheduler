@@ -4,7 +4,7 @@
 
 #define COMPONENT_VERSION_MAJOR 4
 #define COMPONENT_VERSION_MINOR 19
-#define COMPONENT_VERSION_PATCH 4
+#define COMPONENT_VERSION_PATCH 5
 #define COMPONENT_VERSION_SUB_PATCH 0
 
 #define MAKE_STRING(text) #text
@@ -46,6 +46,9 @@ PLUGIN_NAME"\n\n" \
 "Thanks to Andrew Smolko for developing the foo_scheduler project (up to version 4.19).\n" \
 "\n" \
 "Changelog:\n" \
+  "\n" \
+  "= 4.19.5\n" \
+  "* Fixed preferences page default font and low-res layout.\n" \
   "\n" \
   "= 4.19.4\n" \
   "* Fixed single track playlists 'Wait until 1 track played'.\n" \

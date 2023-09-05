@@ -17,6 +17,11 @@ PreferencesPage::~PreferencesPage() {
 
 	m_eventList.Detach();
 	m_actionTree.Detach();
+	DeleteObject(m_font);
+
+	m_staticStatusDateTimeEventsHeader.Detach();
+	m_staticActiveSessionsHeader.Detach();
+	m_staticStatusHeader.Detach();
 }
 
 t_uint32 PreferencesPage::get_state()
@@ -46,7 +51,18 @@ void PreferencesPage::reset()
 
 BOOL PreferencesPage::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 {
-	DoDataExchange(DDX_LOAD);
+
+	DlgResize_Init(false, true);
+
+	HWND wndStaticHeader = uGetDlgItem(IDC_EVENTS_LIST_HEADER);
+	m_staticStatusDateTimeEventsHeader.SubclassWindow(wndStaticHeader);
+	m_staticStatusDateTimeEventsHeader.PaintGradientHeader();
+	wndStaticHeader = uGetDlgItem(IDC_STATIC_ACTION_LIST_HEADER);
+	m_staticActiveSessionsHeader.SubclassWindow(wndStaticHeader);
+	m_staticActiveSessionsHeader.PaintGradientHeader();
+	wndStaticHeader = uGetDlgItem(IDC_STATIC_STATUS_HEADER);
+	m_staticStatusHeader.SubclassWindow(wndStaticHeader);
+	m_staticStatusHeader.PaintGradientHeader();
 
 	m_eventList.CreateInDialog(*this, IDC_EVENT_LIST);
 	m_eventList.Init(m_pModel.get());
@@ -61,6 +77,24 @@ BOOL PreferencesPage::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 	CheckDlgButton(IDC_ENABLED_CHECK, m_pModel->IsSchedulerEnabled());
 
 	return TRUE;
+}
+
+void PreferencesPage::SetThemeFont() {
+	LOGFONTW lf;
+	CWindowDC dc(core_api::get_main_window());
+	CTheme wtheme;
+	HTHEME theme = wtheme.OpenThemeData(core_api::get_main_window(), L"TEXTSTYLE");
+	GetThemeFont(theme, dc, TEXT_BODYTEXT, 0, TMT_FONT, &lf);
+	m_font = CreateFontIndirectW(&lf);
+	SetFont(m_font, true);
+
+	for (HWND walk = ::GetWindow(m_hWnd, GW_CHILD); walk != NULL; ) {
+		HWND next = ::GetWindow(walk, GW_HWNDNEXT);
+		if (::IsWindow(next)) {
+			::SendMessage(next, WM_SETFONT, (WPARAM)m_font, MAKELPARAM(1/*bRedraw*/, 0));
+		}
+		walk = next;
+	}
 }
 
 void PreferencesPage::OnBtnAddEvent(UINT uNotifyCode, int nID, CWindow wndCtl)

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "action_change_playlist.h"
 #include "action_change_playlist_s11n_block.h"
+#include "action_save_playback_state.h"
 #include "service_manager.h"
 #include "scope_exit_function.h"
 
@@ -47,6 +48,9 @@ std::wstring ActionChangePlaylist::GetDescription() const
 
 	case ctActivePlaylist:
 		return L"Active playlist";
+
+	case ctSavedState:
+		return L"Set playlist from saved state";
 	}
 
 	_ASSERTE(false);
@@ -150,7 +154,20 @@ void ActionChangePlaylist::ExecSession::Run(const AsyncCall::CallbackPtr& comple
 				return;
 		}
 		break;
+	case ActionChangePlaylist::ctSavedState:
+		{
+			const boost::any playlistAny = m_alesFuncs->GetValue(ActionSavePlaybackState::GetPlaylistKey());
+			const t_size* playlist = boost::any_cast<t_size>(&playlistAny);
 
+			if (!playlist)
+				return;
+
+			size_t count = pm->get_playlist_count();
+			if (*playlist < count) {
+				playlistIndex = *playlist;
+			}
+		}
+		break;
 	case ActionChangePlaylist::ctNextPlaylist:
 	case ActionChangePlaylist::ctPrevPlaylist:
 	case ActionChangePlaylist::ctActivePlaylist:
@@ -196,8 +213,9 @@ const IAction* ActionChangePlaylist::ExecSession::GetParentAction() const
 	return &m_action;
 }
 
-void ActionChangePlaylist::ExecSession::Init(IActionListExecSessionFuncs&)
+void ActionChangePlaylist::ExecSession::Init(IActionListExecSessionFuncs& alesFuncs)
 {
+	m_alesFuncs = &alesFuncs;
 }
 
 bool ActionChangePlaylist::ExecSession::GetCurrentStateDescription(std::wstring& /*descr*/) const

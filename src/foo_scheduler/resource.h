@@ -59,6 +59,7 @@
 #define IDC_RADIO_SELECT_PLAYLIST       1066
 #define IDC_EDIT_DELAY                  1067
 #define IDC_EDIT_CMD_LINE               1067
+#define IDC_RADIO_SAVED_STATE_PLAYLIST  1067
 #define IDC_SPIN_DELAY                  1068
 #define IDC_BUTTON_PICK                 1069
 #define IDC_STATIC_VOLUME               1070

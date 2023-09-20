@@ -22,6 +22,7 @@ public:
 
 	private:
 		const ActionChangePlaylist& m_action;
+		IActionListExecSessionFuncs* m_alesFuncs = nullptr;
 	};
 
 	ActionChangePlaylist();
@@ -32,6 +33,7 @@ public:
 		ctNextPlaylist,
 		ctPrevPlaylist,
 		ctActivePlaylist,
+		ctSavedState,
 	};
 
 	EChangeType GetChangeType() const;

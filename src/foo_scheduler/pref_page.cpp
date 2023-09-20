@@ -3,8 +3,19 @@
 #include "pref_page.h"
 #include "service_manager.h"
 
+//snapLeft, snapTop, snapRight, snapBottom
+const CDialogResizeHelper::Param rs_params[] = {
+	{IDC_EVENTS_LIST_HEADER, 0,0,1,0},
+	{IDC_BTN_ADD_EVENT, 1,0,1,0},
+	{IDC_EVENT_LIST, 0,0,1,0},
+	{IDC_STATIC_ACTION_LIST_HEADER, 0,0,1,0},
+	{IDC_BTN_ADD_ACTION_LIST, 1,0,1,0},
+	{IDC_ACTION_LIST_TREE, 0,0,1,0},
+	{IDC_STATIC_STATUS_HEADER, 0,0,1,0},
+	{IDC_BTN_SHOW_STATUS_WINDOW, 1,0,1,0},
+};
 PreferencesPage::PreferencesPage(preferences_page_callback::ptr callback) :
-	m_callback(callback), m_changed(false), m_pModel(nullptr)
+	m_callback(callback), m_changed(false), m_pModel(nullptr), m_resize_helper(rs_params)
 {
 	m_pModel.reset(new PrefPageModel(ServiceManager::Instance().GetModel().GetState()));
 
@@ -17,7 +28,6 @@ PreferencesPage::~PreferencesPage() {
 
 	m_eventList.Detach();
 	m_actionTree.Detach();
-	DeleteObject(m_font);
 
 	m_staticStatusDateTimeEventsHeader.Detach();
 	m_staticActiveSessionsHeader.Detach();
@@ -52,7 +62,7 @@ void PreferencesPage::reset()
 BOOL PreferencesPage::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 {
 
-	DlgResize_Init(false, true);
+	DoDataExchange(DDX_LOAD);
 
 	HWND wndStaticHeader = uGetDlgItem(IDC_EVENTS_LIST_HEADER);
 	m_staticStatusDateTimeEventsHeader.SubclassWindow(wndStaticHeader);
@@ -68,33 +78,15 @@ BOOL PreferencesPage::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 	m_eventList.Init(m_pModel.get());
 	ServiceManager::Instance().SetEventListWindow(&m_eventList);
 
-	m_actionTree.Init(m_hWnd, IDC_ACTION_LIST_TREE, m_pModel.get());
-
 	//dark mode
-	m_dark.AddDialog(m_hWnd);
-	m_dark.AddControls(m_hWnd);
+	m_dark.AddDialogWithControls(m_hWnd);
+
+	m_eventList.Init(m_pModel.get());
+	m_actionTree.Init(m_hWnd, IDC_ACTION_LIST_TREE, m_pModel.get());
 
 	CheckDlgButton(IDC_ENABLED_CHECK, m_pModel->IsSchedulerEnabled());
 
 	return TRUE;
-}
-
-void PreferencesPage::SetThemeFont() {
-	LOGFONTW lf;
-	CWindowDC dc(core_api::get_main_window());
-	CTheme wtheme;
-	HTHEME theme = wtheme.OpenThemeData(core_api::get_main_window(), L"TEXTSTYLE");
-	GetThemeFont(theme, dc, TEXT_BODYTEXT, 0, TMT_FONT, &lf);
-	m_font = CreateFontIndirectW(&lf);
-	SetFont(m_font, true);
-
-	for (HWND walk = ::GetWindow(m_hWnd, GW_CHILD); walk != NULL; ) {
-		HWND next = ::GetWindow(walk, GW_HWNDNEXT);
-		if (::IsWindow(next)) {
-			::SendMessage(next, WM_SETFONT, (WPARAM)m_font, MAKELPARAM(1/*bRedraw*/, 0));
-		}
-		walk = next;
-	}
 }
 
 void PreferencesPage::OnBtnAddEvent(UINT uNotifyCode, int nID, CWindow wndCtl)

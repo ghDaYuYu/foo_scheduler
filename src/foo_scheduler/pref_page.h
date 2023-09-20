@@ -1,6 +1,7 @@
 #pragma once
 
 #include "resource.h"
+#include "libPPUI/CDialogResizeHelper.h"
 #include "header_static.h"
 #include "event_list_window.h"
 #include "action_tree_window.h"
@@ -8,9 +9,8 @@
 
 class PreferencesPage :
 	public CDialogImpl<PreferencesPage>,
-	public CDialogResize<PreferencesPage>,
-	public CWinDataExchange<PreferencesPage>,
-	public preferences_page_instance
+	public preferences_page_instance,
+	public CWinDataExchange<PreferencesPage>
 {
 public:
 	// Constructor - invoked by preferences_page_impl helpers - don't do Create() in here,
@@ -29,7 +29,8 @@ public:
 private:
 	BEGIN_MSG_MAP(PreferencesPage)
 		MSG_WM_INITDIALOG(OnInitDialog)
-
+		CHAIN_MSG_MAP_MEMBER(m_resize_helper)
+		CHAIN_MSG_MAP_MEMBER(m_actionTree)
 		COMMAND_ID_HANDLER_EX(IDC_BTN_ADD_EVENT, OnBtnAddEvent)
 		COMMAND_ID_HANDLER_EX(IDC_BTN_ADD_ACTION_LIST, OnBtnAddActionList)
 		COMMAND_ID_HANDLER_EX(IDC_BTN_SHOW_STATUS_WINDOW, OnBtnShowStatusWindow)
@@ -43,13 +44,8 @@ private:
 		DDX_CONTROL(IDC_ACTION_LIST_TREE, m_actionTree)
 	END_DDX_MAP()
 
-	void DlgResize_UpdateLayout(int cxWidth, int cyHeight) {
-		CDialogResize<PreferencesPage>::DlgResize_UpdateLayout(cxWidth, cyHeight);
-	}
-
 private:
 	BOOL OnInitDialog(CWindow wndFocus, LPARAM lInitParam);
-	void SetThemeFont();
 	void OnBtnAddEvent(UINT uNotifyCode, int nID, CWindow wndCtl);
 	void OnBtnAddActionList(UINT uNotifyCode, int nID, CWindow wndCtl);
 	void OnBtnShowStatusWindow(UINT uNotifyCode, int nID, CWindow wndCtl);
@@ -61,7 +57,7 @@ private:
 	const preferences_page_callback::ptr m_callback;
 
 	fb2k::CDarkModeHooks m_dark;
-	HFONT m_font;
+	CDialogResizeHelper m_resize_helper;
 
 	HeaderStatic m_staticStatusDateTimeEventsHeader;
 	HeaderStatic m_staticActiveSessionsHeader;

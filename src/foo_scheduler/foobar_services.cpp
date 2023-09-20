@@ -53,9 +53,9 @@ void PluginConfiguration::set_data_raw(stream_reader* p_stream, t_size p_sizehin
 		readFailed = true;
 	}
 
-	if (readFailed || cfgVersion != PLUGIN_CFG_GLOBAL_VERSION)
+	if (readFailed || cfgVersion < PLUGIN_CFG_GLOBAL_V4_19)
 	{
-		console::info(PLUGIN_FILENAME " : the configuration format is of version 3.x. Upgrade is not supported. "
+		console::info(COMPONENT_NAME " : the configuration format is of version 3.x. Upgrade is not supported. "
 			"Resetting configuration.");
 		return;
 	}
@@ -192,7 +192,7 @@ namespace MainMenuItems
 
 	t_uint32 SchedulerActionListsCommands::get_command_count()
 	{
-		return ServiceManager::Instance().GetMenuItemEventsManager().GetNumEvents();
+		return static_cast<t_uint32>(ServiceManager::Instance().GetMenuItemEventsManager().GetNumEvents());
 	}
 
 	GUID SchedulerActionListsCommands::get_command(t_uint32 p_index)

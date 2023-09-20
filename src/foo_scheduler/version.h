@@ -1,39 +1,55 @@
 #pragma once
 
-#define PLUGIN_NAME "Scheduler Mod"
+#define PLUGIN_NAME "Scheduler mod"
 
 #define COMPONENT_VERSION_MAJOR 4
-#define COMPONENT_VERSION_MINOR 19
-#define COMPONENT_VERSION_PATCH 5
+#define COMPONENT_VERSION_MINOR 20
+#define COMPONENT_VERSION_PATCH 0
 #define COMPONENT_VERSION_SUB_PATCH 0
 
 #define MAKE_STRING(text) #text
+
+//#define FIX_VER
+
+#ifdef FIX_VER
 #define MAKE_COMPONENT_VERSION(major,minor,patch) MAKE_STRING(major) "." MAKE_STRING(minor) "." MAKE_STRING(patch)
+#define FOO_SCHEDULER_VERSION MAKE_COMPONENT_VERSION(COMPONENT_VERSION_MAJOR,COMPONENT_VERSION_MINOR,COMPONENT_VERSION_PATCH)
 #define MAKE_DLL_VERSION(major,minor,patch,subpatch) MAKE_STRING(major) "." MAKE_STRING(minor) "." MAKE_STRING(patch) "." MAKE_STRING(subpatch)
+#else
+#define MAKE_COMPONENT_VERSION(major,minor) MAKE_STRING(major) "." MAKE_STRING(minor)
+#define FOO_SCHEDULER_VERSION MAKE_COMPONENT_VERSION(COMPONENT_VERSION_MAJOR,COMPONENT_VERSION_MINOR)
+#define MAKE_DLL_VERSION(major,minor) MAKE_STRING(major) "." MAKE_STRING(minor)
+#endif
+
 #define MAKE_API_SDK_VERSION(sdk_ver, sdk_target) MAKE_STRING(sdk_ver) " " MAKE_STRING(sdk_target)
 
-//"0.1.2"
-#define FOO_SCHEDULER_VERSION MAKE_COMPONENT_VERSION(COMPONENT_VERSION_MAJOR,COMPONENT_VERSION_MINOR,COMPONENT_VERSION_PATCH)
-
-//0.1.2.3 & "0.1.2.3"
+#ifdef FIX_VER
 #define DLL_VERSION_NUMERIC COMPONENT_VERSION_MAJOR, COMPONENT_VERSION_MINOR, COMPONENT_VERSION_PATCH, COMPONENT_VERSION_SUB_PATCH
 #define DLL_VERSION_STRING MAKE_DLL_VERSION(COMPONENT_VERSION_MAJOR,COMPONENT_VERSION_MINOR,COMPONENT_VERSION_PATCH,COMPONENT_VERSION_SUB_PATCH)
+#else
+#define DLL_VERSION_NUMERIC COMPONENT_VERSION_MAJOR, COMPONENT_VERSION_MINOR
+#define DLL_VERSION_STRING MAKE_DLL_VERSION(COMPONENT_VERSION_MAJOR,COMPONENT_VERSION_MINOR)
+#endif
+
 //fb2k ver
 #define PLUGIN_FB2K_SDK MAKE_API_SDK_VERSION(FOOBAR2000_SDK_VERSION, FOOBAR2000_TARGET_VERSION)
 
 #define COMPONENT_NAME "foo_scheduler_mod"
 #define COMPONENT_YEAR "2023"
 
-#define PLUGIN_FILENAME COMPONENT_NAME
-#define PLUGIN_DLLFILENAME PLUGIN_FILENAME ".dll"
+#define PLUGIN_DLLFILENAME COMPONENT_NAME ".dll"
 #define PLUGIN_VERSION FOO_SCHEDULER_VERSION
 
 // To support correct upgrade from the 3rd version of the plugin.
-#define PLUGIN_CFG_GLOBAL_VERSION 0x0040
+#define PLUGIN_CFG_GLOBAL_V4_19 0x0040
+#define PLUGIN_CFG_GLOBAL_V4_19_FLDS 6
+#define PLUGIN_CFG_GLOBAL_VERSION 0x0041
+#define PLUGIN_CFG_GLOBAL_VERSION_FLDS 7
 
 #define PLUGIN_ABOUT \
-PLUGIN_NAME"\n\n" \
-"Component modded by DaYuyu.\n" \
+"Plugin for scheduling actions like play, stop, system shutdown/wake up and many more." \
+" The schedule for triggering actions can be based on time/date events, player events or user-defined menu items.\n\n" \
+"Author: da yuyu.\n" \
 "Version: "FOO_SCHEDULER_VERSION"\n" \
 "Compiled: "__DATE__ "\n" \
 "fb2k SDK: "PLUGIN_FB2K_SDK"\n" \
@@ -47,8 +63,12 @@ PLUGIN_NAME"\n\n" \
 "\n" \
 "Changelog:\n" \
   "\n" \
+  "= 4.20\n" \
+  "* Fixed empty event list running File > Scheduler mod > Preferences.\n" \
+  "* Added 'Playlist from saved state' option to 'Change playlist' action.\n" \
+  "\n" \
   "= 4.19.5\n" \
-  "* Fixed preferences page default font and low-res layout.\n" \
+  "* Fixed preferences page font and layout.\n" \
   "\n" \
   "= 4.19.4\n" \
   "* Fixed single track playlists 'Wait until 1 track played'.\n" \
@@ -65,7 +85,7 @@ PLUGIN_NAME"\n\n" \
   "* Added new option 'Active playlist' to 'Change playlist' action.\n" \
   "\n" \
   "= 4.19.1\n" \
-  "* Component renamed 'Scheduler Mod'.\n" \
+  "* Component renamed 'Scheduler mod'.\n" \
   "* New 32/64bit installer.\n" \
   "* Event list drag & drop.\n" \
   "* Added date/time event context menu (timer initializer).\n" \

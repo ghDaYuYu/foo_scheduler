@@ -79,7 +79,7 @@ ActionList* ActionList::Clone() const
 std::unique_ptr<ActionList> ActionList::Duplicate(const std::wstring &newName) const
 {
 	std::unique_ptr<ActionList> result(new ActionList(*this));
-    result->SetName(newName);
+	result->SetName(newName);
 	result->CreateGUID();
 	return result;
 } 

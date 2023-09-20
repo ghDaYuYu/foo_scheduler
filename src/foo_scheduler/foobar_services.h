@@ -1,5 +1,7 @@
 #pragma once
 
+using namespace cfg_var_legacy;
+
 class PluginInitQuit : public initquit
 {
 public:

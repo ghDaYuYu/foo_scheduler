@@ -88,11 +88,11 @@ GUID MenuItemEvent::GetGUID() const
 
 std::unique_ptr<MenuItemEvent> MenuItemEvent::Duplicate(const std::wstring &newMenuItemName) const
 {
-    std::unique_ptr<MenuItemEvent> result(new MenuItemEvent(*this));
+	std::unique_ptr<MenuItemEvent> result(new MenuItemEvent(*this));
 	result->NewEventGUID(); //event instance
-    result->SetMenuItemName(newMenuItemName);
-    result->GenerateMenuItemGUID(); //ui
-    return result;
+	result->SetMenuItemName(newMenuItemName);
+	result->GenerateMenuItemGUID(); //ui
+	return result;
 }
 
 void MenuItemEvent::OnSignal()
@@ -166,10 +166,10 @@ int MenuItemEvent::GetPriority() const
 
 std::unique_ptr<Event> MenuItemEvent::CreateFromPrototype() const
 {
-    std::unique_ptr<MenuItemEvent> pClone(new MenuItemEvent(*this));
+	std::unique_ptr<MenuItemEvent> pClone(new MenuItemEvent(*this));
 	pClone->NewEventGUID();
 	// It's important to change uuid, otherwise there may be problems with keyboard shortcuts.
-    pClone->GenerateMenuItemGUID();
+	pClone->GenerateMenuItemGUID();
 
 	return pClone;
 }

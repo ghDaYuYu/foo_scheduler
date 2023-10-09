@@ -561,10 +561,6 @@ bool DateTimeEventEditor::context_menu_show(HWND wnd, LPARAM lParamPos)
 	st.wHour = static_cast<WORD>(t.hours());
 	st.wMinute = static_cast<WORD>(t.minutes());
 	st.wSecond = static_cast<WORD>(t.seconds());
-	
-	if (st.wHour != 0 || st.wMinute != 0 || st.wSecond != 0) {
-		return false;
-	}
 
 	const bool isTimePicker = uGetDlgItem(IDC_TIME_PICKER) == wnd;
 	bool bvk_apps = lParamPos == -1;
@@ -585,16 +581,16 @@ bool DateTimeEventEditor::context_menu_show(HWND wnd, LPARAM lParamPos)
 
 		HMENU menu = CreatePopupMenu();
 
-		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N1M, "Now +&1'");
-		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N2M, "Now +&2'");
-		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N3M, "Now +&3'");
+		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N1M, "Now +1'");
+		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N2M, "Now +2'");
+		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N3M, "Now +3'");
 		uAppendMenu(menu, MF_SEPARATOR, 0, "");
-		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N15M, "Now +&15'");
-		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N30M, "Now +&30'");
-		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N45M, "Now +&45'");
-		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N60M, "Now +&60'");
+		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N15M, "Now +15'");
+		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N30M, "Now +30'");
+		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N45M, "Now +45'");
+		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_N60M, "Now +60'");
 		uAppendMenu(menu, MF_SEPARATOR, 0, "");
-		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_RSECS, "Round &seconds'");
+		uAppendMenu(menu, MF_STRING, ID_TP_POPUP_RSECS, "&Round seconds");
 
 		int cmd = TrackPopupMenu(menu, TPM_RIGHTBUTTON | TPM_NONOTIFY | TPM_RETURNCMD, point.x, point.y, 0, wnd, 0);
 		DestroyMenu(menu);

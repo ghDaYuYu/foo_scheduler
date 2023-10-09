@@ -283,18 +283,18 @@ void EventListWindow::AppendEventItems(CMenu& menuPopup, const bool single_sel)
 	menuPopup.AppendMenu(MF_SEPARATOR);
 
 	menuPopup.AppendMenu(MF_STRING | !single_sel ? MF_DISABLED | MF_GRAYED : 0 | MF_BYCOMMAND,
-		static_cast<UINT_PTR>(menuItemEdit), L"Edit...");
+		static_cast<UINT_PTR>(menuItemEdit), L"&Edit...");
 
     menuPopup.AppendMenu(MF_STRING | !single_sel ? MF_DISABLED | MF_GRAYED : 0 | MF_BYCOMMAND,
-        static_cast<UINT_PTR>(menuItemDuplicate), L"Duplicate");
+        static_cast<UINT_PTR>(menuItemDuplicate), L"&Duplicate");
 
 	menuPopup.AppendMenu(MF_STRING | MF_BYCOMMAND,
-		static_cast<UINT_PTR>(menuItemRemove), L"Remove");
+		static_cast<UINT_PTR>(menuItemRemove), L"Re&move");
 
 	if (runnable) {
 		menuPopup.AppendMenu(MF_SEPARATOR);
 		menuPopup.AppendMenu(MF_STRING | MF_BYCOMMAND,
-			static_cast<UINT_PTR>(menuItemRun), L"Run");
+			static_cast<UINT_PTR>(menuItemRun), L"&Run");
 	}
 
 }

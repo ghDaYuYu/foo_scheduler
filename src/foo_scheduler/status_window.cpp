@@ -36,6 +36,8 @@ StatusWindow::~StatusWindow()
 {
 	static_api_ptr_t<message_loop> pMsgLoop;
 	pMsgLoop->remove_message_filter(this);
+	m_staticStatusDateTimeEventsHeader.Detach();
+	m_staticActiveSessionsHeader.Detach();
 }
 
 BOOL StatusWindow::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)

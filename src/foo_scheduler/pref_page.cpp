@@ -66,17 +66,19 @@ BOOL PreferencesPage::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 
 	HWND wndStaticHeader = uGetDlgItem(IDC_EVENTS_LIST_HEADER);
 	m_staticStatusDateTimeEventsHeader.SubclassWindow(wndStaticHeader);
-	m_staticStatusDateTimeEventsHeader.PaintGradientHeader();
+	m_staticStatusDateTimeEventsHeader.PaintHeader();
 	wndStaticHeader = uGetDlgItem(IDC_STATIC_ACTION_LIST_HEADER);
 	m_staticActiveSessionsHeader.SubclassWindow(wndStaticHeader);
-	m_staticActiveSessionsHeader.PaintGradientHeader();
+	m_staticActiveSessionsHeader.PaintHeader();
 	wndStaticHeader = uGetDlgItem(IDC_STATIC_STATUS_HEADER);
 	m_staticStatusHeader.SubclassWindow(wndStaticHeader);
-	m_staticStatusHeader.PaintGradientHeader();
+	m_staticStatusHeader.PaintHeader();
 
 	m_eventList.CreateInDialog(*this, IDC_EVENT_LIST);
-	m_eventList.Init(m_pModel.get());
+
 	ServiceManager::Instance().SetEventListWindow(&m_eventList);
+
+	CheckDlgButton(IDC_ENABLED_CHECK, m_pModel->IsSchedulerEnabled());
 
 	//dark mode
 	m_dark.AddDialogWithControls(m_hWnd);

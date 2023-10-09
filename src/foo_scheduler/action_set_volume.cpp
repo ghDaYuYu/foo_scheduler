@@ -270,6 +270,8 @@ ActionSetVolumeEditor::ActionSetVolumeEditor(ActionSetVolume& action) : m_action
 
 BOOL ActionSetVolumeEditor::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 {
+	m_dark.AddDialogWithControls(m_hWnd);
+
 	m_volume = m_action.GetVolume();
 	SetVolumeLabel();
 

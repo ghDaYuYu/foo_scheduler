@@ -368,13 +368,10 @@ DateTimeEventEditor::DateTimeEventEditor(DateTimeEvent* pEvent, PrefPageModel* p
 
 BOOL DateTimeEventEditor::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 {
-
 	m_date = GetDlgItem(IDC_DATE_PICKER);
 	m_time = GetDlgItem(IDC_TIME_PICKER);
 
-	// dark mode
-	AddDialog(m_hWnd);
-	AddControls(m_hWnd, m_date, m_time);
+	m_dark.AddDialogWithControls(m_hWnd);
 
 	SetDlgItemText(IDC_EDIT_TITLE, m_pEvent->GetTitle().c_str());
 
@@ -535,10 +532,25 @@ void DateTimeEventEditor::OnDayTypeSelChange(UINT uNotifyCode, int nID, CWindow 
 	UpdateDayControls();
 }
 
-LRESULT DateTimeEventEditor::OnContextMenu(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-{
-	HWND hwndCtrl = (HWND)wParam;
-	context_menu_show(hwndCtrl, lParam);
+LRESULT DateTimeEventEditor::OnNotify(UINT ctrl, LPNMHDR lpNmhdr) {
+
+	if (!m_dark.IsDark() || lpNmhdr->idFrom != IDC_DATE_PICKER) {
+		return FALSE;
+	}
+
+	if (lpNmhdr->code == (WPARAM)DTN_DROPDOWN) {
+		auto hwndMothCal = DateTime_GetMonthCal(m_date);
+		SetWindowTheme(hwndMothCal, L"", L"");
+		//todo: save/reset current field
+	}
+	else if (lpNmhdr->code == (WPARAM)DTN_CLOSEUP) {
+		//todo: restore current field
+	}
+	return FALSE;
+}
+
+LRESULT DateTimeEventEditor::OnContextMenu(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled) {
+	context_menu_show((HWND)wParam, lParam);
 	return FALSE;
 }
 
@@ -688,14 +700,11 @@ void DateTimeEventEditor::CreateWeekDaysControl()
 	DWORD dwStyle = LVS_EX_LABELTIP | LVS_EX_DOUBLEBUFFER;
 	m_weekDays.SetExtendedListViewStyle(dwStyle, dwStyle);
 
-	::SetWindowTheme(m_weekDays.m_hWnd, L"explorer", 0);
-
 	CRect rect;
 	m_weekDays.GetClientRect(rect);
 
 	m_weekDays.AddColumn(L"", 0);
 	m_weekDays.SetColumnWidth(0, rect.Width() - ::GetSystemMetrics(SM_CXVSCROLL));
-
 	m_weekDays.AddItem(0, 0, _T("Mon"));
 	m_weekDays.AddItem(1, 0, _T("Tue"));
 	m_weekDays.AddItem(2, 0, _T("Wed"));

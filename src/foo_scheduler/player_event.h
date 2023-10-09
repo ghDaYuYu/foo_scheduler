@@ -124,7 +124,7 @@ private:
 // PlayerEventEditor
 //------------------------------------------------------------------------------
 
-class PlayerEventEditor : public CDialogImpl<PlayerEventEditor>, public fb2k::CDarkModeHooks
+class PlayerEventEditor : public CDialogImpl<PlayerEventEditor>
 {
 public:
 	enum { IDD = IDD_PLAYER_EVENT_CONFIG };
@@ -159,4 +159,5 @@ private:
 	bool m_stopReasonsControlVisible;
 
 	PopupTooltipMessage m_popupTooltipMsg;
+	fb2k::CDarkModeHooks m_dark;
 };

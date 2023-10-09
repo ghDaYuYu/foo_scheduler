@@ -47,15 +47,12 @@ private:
 	std::wstring m_commandLine;
 };
 
-class ActionLaunchAppEditor : public CDialogImpl<ActionLaunchAppEditor>, public fb2k::CDarkModeHooks
+class ActionLaunchAppEditor : public CDialogImpl<ActionLaunchAppEditor>
 {
 public:
 	enum { IDD = IDD_ACTION_LAUNCH_APP_CONFIG };
 
 	explicit ActionLaunchAppEditor(ActionLaunchApp& action);
-
-private:
-	ActionLaunchApp& m_action;
 
 private:
 	BEGIN_MSG_MAP_EX(ActionLaunchAppEditor)
@@ -70,4 +67,8 @@ private:
 	BOOL OnInitDialog(CWindow wndFocus, LPARAM lInitParam);
 	void OnCloseCmd(UINT uNotifyCode, int nID, CWindow wndCtl);
 	void OnOpenFile(UINT uNotifyCode, int nID, CWindow wndCtl);
+
+private:
+	ActionLaunchApp& m_action;
+	fb2k::CDarkModeHooks m_dark;
 };

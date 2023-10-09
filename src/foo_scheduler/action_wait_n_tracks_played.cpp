@@ -252,8 +252,7 @@ BOOL ActionWaitNTracksEditor::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 	CenterWindow(GetParent());
 
 	// dark mode
-	AddDialog(m_hWnd);
-	AddControls(m_hWnd);
+	m_dark.AddDialogWithControls(m_hWnd);
 
 	return TRUE;
 }

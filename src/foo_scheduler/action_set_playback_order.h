@@ -51,15 +51,12 @@ private:
 // ActionSetPlaybackOrderEditor
 //------------------------------------------------------------------------------
 
-class ActionSetPlaybackOrderEditor : public CDialogImpl<ActionSetPlaybackOrderEditor>, public fb2k::CDarkModeHooks
+class ActionSetPlaybackOrderEditor : public CDialogImpl<ActionSetPlaybackOrderEditor>
 {
 public:
 	enum { IDD = IDD_ACTION_SET_PLAY_ORDER_CONFIG };
 
 	explicit ActionSetPlaybackOrderEditor(ActionSetPlaybackOrder& action);
-
-private:
-	ActionSetPlaybackOrder& m_action;
 
 private:
 	BEGIN_MSG_MAP_EX(ActionSetPlaybackOrderEditor)
@@ -72,7 +69,10 @@ private:
 	BOOL OnInitDialog(CWindow wndFocus, LPARAM lInitParam);
 	void OnCloseCmd(UINT uNotifyCode, int nID, CWindow wndCtl);
 
+private:
 	CComboBox m_orderCombo;
-
 	std::vector<GUID> m_orderGUIDs;
+
+	ActionSetPlaybackOrder& m_action;
+	fb2k::CDarkModeHooks m_dark;
 };

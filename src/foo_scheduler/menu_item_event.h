@@ -50,7 +50,7 @@ private:
 	GUID m_menuItemGUID;
 };
 
-class MenuItemEventEditor : public CDialogImpl<MenuItemEventEditor>, public fb2k::CDarkModeHooks
+class MenuItemEventEditor : public CDialogImpl<MenuItemEventEditor>
 {
 public:
 	enum { IDD = IDD_MENU_ITEM_EVENT_CONFIG };
@@ -78,4 +78,5 @@ private:
 	CComboBox m_finalAction;
 
 	PopupTooltipMessage m_popupTooltipMsg;
+	fb2k::CDarkModeHooks m_dark;
 };

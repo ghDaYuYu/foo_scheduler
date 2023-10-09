@@ -84,15 +84,12 @@ private:
 // ActionShutdownEditor
 //------------------------------------------------------------------------------
 
-class ActionShutdownEditor : public CDialogImpl<ActionShutdownEditor>, public fb2k::CDarkModeHooks
+class ActionShutdownEditor : public CDialogImpl<ActionShutdownEditor>
 {
 public:
 	enum { IDD = IDD_ACTION_SHUTDOWN_CONFIG };
 
 	explicit ActionShutdownEditor(ActionShutdown& action);
-
-private:
-	ActionShutdown& m_action;
 
 private:
 	BEGIN_MSG_MAP_EX(ActionShutdownEditor)
@@ -105,5 +102,9 @@ private:
 	BOOL OnInitDialog(CWindow wndFocus, LPARAM lInitParam);
 	void OnCloseCmd(UINT uNotifyCode, int nID, CWindow wndCtl);
 
+private:
 	CComboBox m_typeCombo;
+
+	ActionShutdown& m_action;
+	fb2k::CDarkModeHooks m_dark;
 };

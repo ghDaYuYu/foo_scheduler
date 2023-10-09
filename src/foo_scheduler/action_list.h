@@ -71,7 +71,7 @@ inline ActionList* new_clone(const ActionList& a)
 // ActionListEditor
 //------------------------------------------------------------------------------
 
-class ActionListEditor : public CDialogImpl<ActionListEditor>, public fb2k::CDarkModeHooks
+class ActionListEditor : public CDialogImpl<ActionListEditor>
 {
 public:
 	enum { IDD = IDD_ACTION_LIST_CONFIG };
@@ -98,4 +98,5 @@ private:
 	CEdit m_actionListName;
 
 	PopupTooltipMessage m_popupTooltipMsg;
+	fb2k::CDarkModeHooks m_dark;
 };

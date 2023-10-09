@@ -82,18 +82,13 @@ private:
 
 class ActionStartPlaybackEditor :
 	public CDialogImpl<ActionStartPlaybackEditor>,
-	public CWinDataExchange<ActionStartPlaybackEditor>,
-	public fb2k::CDarkModeHooks
+	public CWinDataExchange<ActionStartPlaybackEditor>
 {
 public:
 	enum { IDD = IDD_ACTION_START_PLAYBACK_CONFIG };
 
 	explicit ActionStartPlaybackEditor(ActionStartPlayback* pAction);
 
-private:
-	ActionStartPlayback* m_pAction;
-
-	int m_playbackStartType;
 
 private:
 	BEGIN_MSG_MAP_EX(ActionStartPlaybackEditor)
@@ -123,4 +118,8 @@ private:
 
 private:
 	PopupTooltipMessage m_popupTooltipMsg;
+
+	ActionStartPlayback* m_pAction;
+	int m_playbackStartType;
+	fb2k::CDarkModeHooks m_dark;
 };

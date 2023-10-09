@@ -221,8 +221,7 @@ BOOL PlayerEventEditor::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
 	std::vector<std::pair<std::wstring, int>> comboItems;
 
 	// dark mode
-	AddDialog(m_hWnd);
-	AddControls(m_hWnd);
+	m_dark.AddDialogWithControls(m_hWnd);
 
 	for (int i = PlayerEventType::onPlaybackStart; i < PlayerEventType::numEvents; ++i)
 		comboItems.push_back(std::make_pair(PlayerEventType::Label(static_cast<PlayerEventType::Type>(i)), i));

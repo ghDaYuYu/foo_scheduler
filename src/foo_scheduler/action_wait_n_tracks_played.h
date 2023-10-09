@@ -82,7 +82,7 @@ private:
 // ActionDelayEditor
 //------------------------------------------------------------------------------
 
-class ActionWaitNTracksEditor : public CDialogImpl<ActionWaitNTracksEditor>, public fb2k::CDarkModeHooks
+class ActionWaitNTracksEditor : public CDialogImpl<ActionWaitNTracksEditor>
 {
 public:
 	enum { IDD = IDD_ACTION_WAIT_N_TRACKS_CONFIG };
@@ -103,12 +103,12 @@ private:
 
 	void enable_controls(bool eof);
 
-private:
-
 	PopupTooltipMessage m_popupTooltipMsg;
-	int m_bk_numtracks = 1;
 	CButton m_checkEOF;
+	int m_bk_numtracks = 1;
 
+private:
 	ActionWaitNTracksPlayed& m_action;
+	fb2k::CDarkModeHooks m_dark;
 };
 

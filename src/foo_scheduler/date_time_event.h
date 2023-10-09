@@ -84,7 +84,7 @@ private:
 	bool m_wakeup;
 };
 
-class DateTimeEventEditor : public CDialogImpl<DateTimeEventEditor>, public fb2k::CDarkModeHooks
+class DateTimeEventEditor : public CDialogImpl<DateTimeEventEditor>
 {
 public:
 	enum { IDD = IDD_DATETIME_EVENT_CONFIG };
@@ -105,8 +105,8 @@ public:
 private:
 	BEGIN_MSG_MAP(DateTimeEventEditor)
 		MSG_WM_INITDIALOG(OnInitDialog)
-
 		COMMAND_HANDLER_EX(IDC_COMBO_DAY, CBN_SELCHANGE, OnDayTypeSelChange)
+		MSG_WM_NOTIFY(OnNotify)
 		MESSAGE_HANDLER(WM_CONTEXTMENU, OnContextMenu)
 		COMMAND_ID_HANDLER_EX(IDOK, OnClose)
 		COMMAND_ID_HANDLER_EX(IDCANCEL, OnClose)
@@ -116,6 +116,7 @@ private:
 	void OnClose(UINT uNotifyCode, int nID, CWindow wndCtl);
 
 	void OnDayTypeSelChange(UINT uNotifyCode, int nID, CWindow wndCtl);
+	LRESULT OnNotify(UINT /*ctrl*/, LPNMHDR /*lParam*/);
 	LRESULT OnContextMenu(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	bool context_menu_show(HWND wnd, LPARAM lParamPos);
 	bool context_menu_switch(HWND wnd, POINT point, int cmd);
@@ -124,7 +125,7 @@ private:
 	void InitTime();
 	void InitDate();
 	void InitWeekDays();
-	
+
 	void CreateWeekDaysControl();
 	void UpdateDayControls();
 
@@ -143,6 +144,6 @@ private:
 	CCheckListViewCtrl m_weekDays;
 	CDateTimePickerCtrl m_date;
 	CDateTimePickerCtrl m_time;
-
 	mutable PopupTooltipMessage m_popupTooltipMsg;
+	fb2k::CDarkModeHooks m_dark;
 };

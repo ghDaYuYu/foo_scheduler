@@ -69,7 +69,7 @@ private:
 // ActionDelayEditor
 //------------------------------------------------------------------------------
 
-class ActionDelayEditor : public CDialogImpl<ActionDelayEditor>, public fb2k::CDarkModeHooks
+class ActionDelayEditor : public CDialogImpl<ActionDelayEditor>
 {
 public:
 	enum { IDD = IDD_ACTION_DELAY_CONFIG };
@@ -77,12 +77,8 @@ public:
 	explicit ActionDelayEditor(ActionDelay& action);
 
 private:
-	ActionDelay& m_action;
-
-private:
 	BEGIN_MSG_MAP_EX(ActionDelayEditor)
 		MSG_WM_INITDIALOG(OnInitDialog)
-
 		COMMAND_ID_HANDLER_EX(IDOK,     OnCloseCmd)
 		COMMAND_ID_HANDLER_EX(IDCANCEL, OnCloseCmd)
 	END_MSG_MAP()
@@ -90,7 +86,9 @@ private:
 	BOOL OnInitDialog(CWindow wndFocus, LPARAM lInitParam);
 	void OnCloseCmd(UINT uNotifyCode, int nID, CWindow wndCtl);
 
+private:
+	ActionDelay& m_action;
 	CComboBox m_delayUnitsCombo;
-
 	PopupTooltipMessage m_popupTooltipMsg;
+	fb2k::CDarkModeHooks m_dark;
 };

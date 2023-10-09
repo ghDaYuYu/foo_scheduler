@@ -1,6 +1,6 @@
 #include "pch.h"
 #include <chrono>
-#include <ctime>    
+#include <ctime>
 #include "date_time_event.h"
 #include "pref_page_model.h"
 #include "combo_helpers.h"
@@ -15,7 +15,7 @@ DateTimeEvent::DateTimeEvent() :
 	m_date(boost::gregorian::day_clock::local_day()),
 	m_wakeup(false), m_finalAction(finalActionRemove)
 {
-
+	//..
 }
 
 DateTimeEvent::DateTimeEvent(const DateTimeEvent& rhs) : Event(rhs),
@@ -23,6 +23,7 @@ DateTimeEvent::DateTimeEvent(const DateTimeEvent& rhs) : Event(rhs),
 	m_wakeup(rhs.m_wakeup), m_time(rhs.m_time), m_title(rhs.m_title),
 	m_finalAction(rhs.m_finalAction)
 {
+	//..
 }
 
 std::wstring DateTimeEvent::GetName() const
@@ -162,10 +163,10 @@ void DateTimeEvent::SetWakeup(bool val)
 
 std::unique_ptr<DateTimeEvent> DateTimeEvent::Duplicate(const std::wstring &newTitle) const
 {
-    std::unique_ptr<DateTimeEvent> result(new DateTimeEvent(*this));
+	std::unique_ptr<DateTimeEvent> result(new DateTimeEvent(*this));
 	result->NewEventGUID();
-    result->SetTitle(newTitle);
-    return result;
+	result->SetTitle(newTitle);
+	return result;
 }
 
 std::wstring DateTimeEvent::GetDailyDescription() const
@@ -363,7 +364,7 @@ namespace
 DateTimeEventEditor::DateTimeEventEditor(DateTimeEvent* pEvent, PrefPageModel* pPrefPageModel) :
 	m_pEvent(pEvent), m_pPrefPageModel(pPrefPageModel)
 {
-
+	//..
 }
 
 BOOL DateTimeEventEditor::OnInitDialog(CWindow wndFocus, LPARAM lInitParam)
@@ -554,8 +555,8 @@ LRESULT DateTimeEventEditor::OnContextMenu(UINT uMsg, WPARAM wParam, LPARAM lPar
 	return FALSE;
 }
 
-bool DateTimeEventEditor::context_menu_show(HWND wnd, LPARAM lParamPos)
-{
+bool DateTimeEventEditor::context_menu_show(HWND wnd, LPARAM lParamPos) {
+
 	SYSTEMTIME st;
 	boost::posix_time::time_duration t = m_pEvent->GetTime();
 	st.wHour = static_cast<WORD>(t.hours());

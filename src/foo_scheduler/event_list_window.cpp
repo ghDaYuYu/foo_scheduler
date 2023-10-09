@@ -12,48 +12,48 @@ namespace
 class EventDuplicateVisitor : public IEventVisitor
 {
 public:
-    explicit EventDuplicateVisitor(const std::vector<Event*>& events)
-        : m_modelEvents(events)
-    {
-    }
+	explicit EventDuplicateVisitor(const std::vector<Event*>& events)
+		: m_modelEvents(events)
+	{
+	}
 
-    std::unique_ptr<Event> TakeEvent()
-    {
-        return std::move(m_event);
-    }
+	std::unique_ptr<Event> TakeEvent()
+	{
+		return std::move(m_event);
+	}
 
 private: // IEventVisitor
-    void Visit(PlayerEvent& event) override
-    {
-        m_event = event.Clone();
-    }
+	void Visit(PlayerEvent& event) override
+	{
+		m_event = event.Clone();
+	}
 
-    void Visit(DateTimeEvent& event) override
-    {
-        const std::wstring newTitle = GenerateDuplicateName(event.GetTitle(), m_modelEvents, [] (Event* e) {
-            if (const DateTimeEvent* dateTimeEvent = dynamic_cast<const DateTimeEvent*>(e))
-                return dateTimeEvent->GetTitle();
-            return std::wstring();
-        });
+	void Visit(DateTimeEvent& event) override
+	{
+		const std::wstring newTitle = GenerateDuplicateName(event.GetTitle(), m_modelEvents, [] (Event* e) {
+			if (const DateTimeEvent* dateTimeEvent = dynamic_cast<const DateTimeEvent*>(e))
+				return dateTimeEvent->GetTitle();
+			return std::wstring();
+		});
 
-        m_event = event.Duplicate(newTitle);
-    }
+		m_event = event.Duplicate(newTitle);
+	}
 
-    void Visit(MenuItemEvent& event) override
-    {
-        const std::wstring newMenuItemName =
-            GenerateDuplicateName(event.GetMenuItemName(), m_modelEvents, [](Event *e) {
-                if (const MenuItemEvent *menuItemEvent = dynamic_cast<const MenuItemEvent *>(e))
-                    return menuItemEvent->GetMenuItemName();
-                return std::wstring();
-            });
+	void Visit(MenuItemEvent& event) override
+	{
+		const std::wstring newMenuItemName =
+			GenerateDuplicateName(event.GetMenuItemName(), m_modelEvents, [](Event *e) {
+				if (const MenuItemEvent *menuItemEvent = dynamic_cast<const MenuItemEvent *>(e))
+					return menuItemEvent->GetMenuItemName();
+				return std::wstring();
+			});
 
-        m_event = event.Duplicate(newMenuItemName);
-    }
+		m_event = event.Duplicate(newMenuItemName);
+	}
 
 private:
-    std::vector<Event*> m_modelEvents;
-    std::unique_ptr<Event> m_event;
+	std::vector<Event*> m_modelEvents;
+	std::unique_ptr<Event> m_event;
 };
 
 } // namespace
@@ -193,7 +193,7 @@ void EventListWindow::ShowEventContextMenu(pfc::bit_array_bittable selmask, cons
 		EditEvent(pEvent);
 		break;
 
-    case menuItemDuplicate:
+	case menuItemDuplicate:
 		{
 			EventDuplicateVisitor visitor(m_pModel->GetEvents());
 			pEvent->ApplyVisitor(visitor);
@@ -210,7 +210,7 @@ void EventListWindow::ShowEventContextMenu(pfc::bit_array_bittable selmask, cons
 		ServiceManager::Instance().GetRootController().ProcessEvent(pEvent);
 		break;
 
-	default: // Action list selected.
+	default: // task (action list) selected.
 		{
 			std::size_t actionListIndex = uCmdID - 1;
 			std::vector<ActionList*> actionLists = m_pModel->GetActionLists();
@@ -442,48 +442,10 @@ void EventListWindow::OnSubItemClicked(t_size item, t_size subItem, CPoint pt) {
 	__super::OnSubItemClicked(item, subItem, pt);
 }
 
-// Inplace edit handlers
-// Overrides of CTableEditHelperV2 methods
-void EventListWindow::TableEdit_SetField(t_size item, t_size subItem, const char* value) {
-	if (subItem == 0) {
-		m_vdata[item].enabled = value;
-		ReloadItem(item);
-	}
-	else if (subItem == 1) {
-		m_vdata[item].eventdesc = value;
-		ReloadItem(item);
-		Event* pEvent = reinterpret_cast<Event*>(m_vdata.at(item).p);
-		ActionList* pActionList = m_pModel->GetActionListByGUID(pEvent->GetActionListGUID());
-
-		if (pEvent->GetName()._Equal(L"date/time event")) {
-			TCHAR w[255];
-			pfc::string8 str = pfc::string8(value);
-			pfc::stringcvt::convert_utf8_to_wide(w, 255, value, str.get_length());
-			((DateTimeEvent*)pEvent)->SetTitle(w);
-			m_pModel->UpdateEvent(pEvent);
-		}
-
-		data_t dt;
-		build_row_data(dt, item, pEvent, pActionList);
-		m_vdata.at(item) = dt;
-		UpdateItem(item);
-	}
-}
-
-void EventListWindow::TableEdit_GetField(t_size item, t_size subItem, pfc::string_base& out, t_size& lineCount) {
-	if (subItem == 1) {
-		Event* pEvent = reinterpret_cast<Event*>(m_vdata.at(item).p);	
-		std::wstring wstr = ((DateTimeEvent*)pEvent)->GetTitle().c_str();
-		char buffer[255];
-		pfc::stringcvt::convert_wide_to_utf8(buffer, 255, wstr.c_str(), wstr.size());
-		out = buffer;
-	}
-}
-
 // remove mask
 
 void EventListWindow::RemoveMask(pfc::bit_array const& mask) {
-	
+
 	if (mask.get(footerRow())) return;
 
 	auto oldCount = GetItemCount();

@@ -3,20 +3,25 @@
 #define PLUGIN_NAME "Scheduler mod"
 
 #define COMPONENT_VERSION_MAJOR 4
-#define COMPONENT_VERSION_MINOR 20
+#define COMPONENT_VERSION_MINOR 21
 #define COMPONENT_VERSION_PATCH 0
 #define COMPONENT_VERSION_SUB_PATCH 0
 
 #define MAKE_STRING(text) #text
 
 //#define FIX_VER
+#define BETA_VER
 
 #ifdef FIX_VER
 #define MAKE_COMPONENT_VERSION(major,minor,patch) MAKE_STRING(major) "." MAKE_STRING(minor) "." MAKE_STRING(patch)
 #define FOO_SCHEDULER_VERSION MAKE_COMPONENT_VERSION(COMPONENT_VERSION_MAJOR,COMPONENT_VERSION_MINOR,COMPONENT_VERSION_PATCH)
 #define MAKE_DLL_VERSION(major,minor,patch,subpatch) MAKE_STRING(major) "." MAKE_STRING(minor) "." MAKE_STRING(patch) "." MAKE_STRING(subpatch)
 #else
+#ifdef BETA_VER
+#define MAKE_COMPONENT_VERSION(major,minor) MAKE_STRING(major) "." MAKE_STRING(minor) " Beta 2"
+#else
 #define MAKE_COMPONENT_VERSION(major,minor) MAKE_STRING(major) "." MAKE_STRING(minor)
+#endif
 #define FOO_SCHEDULER_VERSION MAKE_COMPONENT_VERSION(COMPONENT_VERSION_MAJOR,COMPONENT_VERSION_MINOR)
 #define MAKE_DLL_VERSION(major,minor) MAKE_STRING(major) "." MAKE_STRING(minor)
 #endif
@@ -63,6 +68,11 @@
 "\n" \
 "Changelog:\n" \
   "\n" \
+  "= 4.21\n" \
+  "* 'Action list' renamed to 'Task'.\n" \
+  "* Dark mode: fixed Set volume dialog.\n" \
+  "* Dark mode: partial fixes for Date and time pickers.\n" \
+  "\n" \
   "= 4.20\n" \
   "* Fixed empty event list running File > Scheduler mod > Preferences.\n" \
   "* Added 'Playlist from saved state' option to 'Change playlist' action.\n" \
@@ -74,7 +84,7 @@
   "* Fixed single track playlists 'Wait until 1 track played'.\n" \
   "* Fixed status window item updates.\n" \
   "* Fixed restore status window screen position.\n" \
-  "* Added 'Run' menu item to context menu.\n" \
+  "* Added 'Run' menu item to the event context menu.\n" \
   "* Added 'End of Files' option to 'Wait until N track played'.\n" \
   "\n" \
   "= 4.19.3\n" \

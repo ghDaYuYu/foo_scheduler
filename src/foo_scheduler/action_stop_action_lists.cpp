@@ -22,7 +22,7 @@ int ActionStopActionLists::GetPriority() const
 
 std::wstring ActionStopActionLists::GetName() const
 {
-	return L"Stop all action lists but this";
+	return L"Stop all tasks but this";
 }
 
 IAction* ActionStopActionLists::Clone() const

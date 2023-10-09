@@ -136,7 +136,7 @@ namespace MainMenuItems
 		else if (p_index == miiStatusWindow)
 			p_out = "Status window";
 		else if (p_index == miiStopAllActionLists)
-			p_out = "Stop all action lists";
+			p_out = "Stop all tasks";
 	}
 
 	bool SchedulerMainPopupCommands::get_description(t_uint32 p_index, pfc::string_base& p_out)
@@ -146,7 +146,7 @@ namespace MainMenuItems
 		else if (p_index == miiStatusWindow)
 			p_out = "Opens status window.";
 		else if (p_index == miiStopAllActionLists)
-			p_out = "Stops all action lists.";
+			p_out = "Stops all tasks.";
 		else
 			return false;
 

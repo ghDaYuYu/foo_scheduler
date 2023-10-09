@@ -273,7 +273,7 @@ void EventListWindow::AppendActionListsItems(CMenu& menuPopup, bool replace, Eve
 		}
 	}
 	if (!replace) {
-		menuPopup.AppendMenu(MF_POPUP, menuActionLists->Detach(), L"Assign action list");
+		menuPopup.AppendMenu(MF_POPUP, menuActionLists->Detach(), L"&Assign task");
 		delete menuActionLists;
 	}
 }
@@ -362,14 +362,14 @@ void EventListWindow::InitColumns()
 	{
 		AddColumnEx("", scw);
 		AddColumnEx("Event", (rcList.Width() * 2) / 3);
-		AddColumn("Action list", UINT32_MAX);
+		AddColumn("Task", UINT32_MAX);
 	}
 	else
 	{
 		_ASSERTE(cw.size() == 2);
 		AddColumnEx("", scw);
 		AddColumnEx("Event", cw[0]);
-		AddColumn("Action list", cw[1]);
+		AddColumn("Task", cw[1]);
 	}
 }
 

@@ -219,13 +219,13 @@ void ActionListEditor::OnClose(UINT uNotifyCode, int nID, CWindow wndCtl)
 
 		if (text.IsEmpty())
 		{
-			m_popupTooltipMsg.Show(L"Enter action list's name.", m_actionListName);
+			m_popupTooltipMsg.Show(L"Enter task name.", m_actionListName);
 			return;
 		}
 
 		if (!CheckActionListName(static_cast<LPCWSTR>(text)))
 		{
-			m_popupTooltipMsg.Show(L"Action list with this name already exists.", m_actionListName);
+			m_popupTooltipMsg.Show(L"Task name already in use.", m_actionListName);
 			return;
 		}
 

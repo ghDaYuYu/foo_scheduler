@@ -557,6 +557,10 @@ LRESULT DateTimeEventEditor::OnContextMenu(UINT uMsg, WPARAM wParam, LPARAM lPar
 
 bool DateTimeEventEditor::context_menu_show(HWND wnd, LPARAM lParamPos) {
 
+	if(uGetDlgItem(IDC_TIME_PICKER) != wnd) {
+		return false;   
+	}
+
 	SYSTEMTIME st;
 	boost::posix_time::time_duration t = m_pEvent->GetTime();
 	st.wHour = static_cast<WORD>(t.hours());

@@ -10,7 +10,7 @@
 #define MAKE_STRING(text) #text
 
 //#define FIX_VER
-#define BETA_VER
+//#define BETA_VER
 
 #ifdef FIX_VER
 #define MAKE_COMPONENT_VERSION(major,minor,patch) MAKE_STRING(major) "." MAKE_STRING(minor) "." MAKE_STRING(patch)
@@ -54,7 +54,7 @@
 #define PLUGIN_ABOUT \
 "Plugin for scheduling actions like play, stop, system shutdown/wake up and many more." \
 " The schedule for triggering actions can be based on time/date events, player events or user-defined menu items.\n\n" \
-"Author: da yuyu.\n" \
+"Author: da yuyu\n" \
 "Version: "FOO_SCHEDULER_VERSION"\n" \
 "Compiled: "__DATE__ "\n" \
 "fb2k SDK: "PLUGIN_FB2K_SDK"\n" \
@@ -69,9 +69,10 @@
 "Changelog:\n" \
   "\n" \
   "= 4.21\n" \
-  "* 'Action list' renamed to 'Task'.\n" \
-  "* Dark mode: fixed Set volume dialog.\n" \
-  "* Dark mode: partial fixes for Date and time pickers.\n" \
+  "* 'Action list' renamed 'Task'.\n" \
+  "* Dark mode: fixed volume dialog.\n" \
+  "* Dark mode: fixed date/time picker background color.\n" \
+  "* Fixed time/date picker context menu.\n" \
   "\n" \
   "= 4.20\n" \
   "* Fixed empty event list running File > Scheduler mod > Preferences.\n" \
